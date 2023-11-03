@@ -1,4 +1,5 @@
 const WalletService = require("../services/walletService");
+const startBot = require("../../bot");
 
 // Create a new wallet
 const createWallet = async (req, res) => {
@@ -24,9 +25,6 @@ const getUserWallets = async (req, res) => {
   }
 };
 //////////
-
-const startBot = require("../../bot");
-const WalletService = require("../services/walletService");
 
 const startBotEndpoint = async (req, res) => {
   try {

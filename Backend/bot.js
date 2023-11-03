@@ -13,29 +13,30 @@ const uniFactoryAddress = "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f";
 const uniRouterAddress = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
 const WETHaddress = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
 
-/* const decryptedPrivateKey = "0x5aaf8787b75baddef92b2423d5b8a58c2e1d1077319caa2000f5c7f671603d3a"; //only for developement 
-const tokenToBuy = "0xCC02cbCDD92205d74Be5934493650Edc3aC9dfB2";   //only for developement */
+let decryptedPrivateKey =
+  "0x5aaf8787b75baddef92b2423d5b8a58c2e1d1077319caa2000f5c7f671603d3a"; //only for developement
+let tokenToBuy = "0xCC02cbCDD92205d74Be5934493650Edc3aC9dfB2"; //only for developement
 
-const uFactory = new ethers.Contract(
-  uniFactoryAddress,
-  IUniswapV2Factory.abi,
-  sniper
-);
-const uRouter = new ethers.Contract(
-  uniRouterAddress,
-  IUniswapV2Router02.abi,
-  sniper
-);
-const WETH = new ethers.Contract(WETHaddress, IERC20.abi, sniper);
+let AMOUNT = "0"; // ETH
+let SLIPPAGE = 0.2; //Default value
+const slippage = SLIPPAGE * 10; // to avoid type-conflicts when calculating with BigNumbers
 
-const AMOUNT = "0.2"; // ETH
-const SLIPPAGE = 0.2;
-const slippage = SLIPPAGE * 10; // 20% Slippage
-
-async function startBot({ amount, slippage, tokenToBuy, decryptedPrivateKey }) {
+async function startBot({ AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey }) {
   const wallet = new ethers.Wallet(decryptedPrivateKey, provider);
   const sniper = wallet.connect(provider);
   const sniperAdress = wallet.address;
+
+  const uFactory = new ethers.Contract(
+    uniFactoryAddress,
+    IUniswapV2Factory.abi,
+    sniper
+  );
+  const uRouter = new ethers.Contract(
+    uniRouterAddress,
+    IUniswapV2Router02.abi,
+    sniper
+  );
+  const WETH = new ethers.Contract(WETHaddress, IERC20.abi, sniper);
 
   uFactory.on("PairCreated", async (token0, token1, pair, event) => {
     console.log(`New pair detected...\n`);
@@ -130,6 +131,6 @@ async function startBot({ amount, slippage, tokenToBuy, decryptedPrivateKey }) {
   console.log(`Listening for new pairs created on Uniswap V2...\n`);
 }
 
-main();
+startBot({ AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey });
 
 module.exports = startBot;
