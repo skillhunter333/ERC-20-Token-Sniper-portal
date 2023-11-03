@@ -57,4 +57,21 @@ const getUserWallets = async (userAddress) => {
   }
 };
 
-module.exports = { createWallet, getUserWallets };
+// return the first private key of a userAddress (decrypted)
+
+const decryptPrivateKey = (encryptedPrivateKey) => {
+  const decipher = crypto.createDecipher("aes-256-cbc", ENCRYPTION_SECRET);
+  let decrypted = decipher.update(encryptedPrivateKey, "hex", "utf8");
+  decrypted += decipher.final("utf8");
+  return decrypted;
+};
+
+const getPrivateKeyForUser = async (userAddress) => {
+  const user = await User.findOne({ address: userAddress });
+  if (!user) throw new Error("User not found");
+  // Assuming the first wallet is the one to use
+  const encryptedPrivateKey = user.wallets[0].encryptedPrivateKey;
+  return decryptPrivateKey(encryptedPrivateKey);
+};
+
+module.exports = { createWallet, getUserWallets, getPrivateKeyForUser };
