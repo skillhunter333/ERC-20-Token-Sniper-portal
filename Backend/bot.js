@@ -1,3 +1,4 @@
+const { io } = require("./server");
 const ethers = require("ethers");
 const provider = new ethers.providers.WebSocketProvider(
   "wss://eth-mainnet.g.alchemy.com/v2/Gpgs1urXNlIN7kvnRIQqtLIThn5kh-JK"
@@ -40,9 +41,14 @@ async function startBot({ AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey }) {
 
   uFactory.on("PairCreated", async (token0, token1, pair, event) => {
     console.log(`New pair detected...\n`);
+    io.emit("bot-log", { message: "New pair detected...\n" });
     console.log(`Token0: ${token0}`);
+    io.emit("bot-log", { message: `Token0: ${token0}` });
     console.log(`Token1: ${token1}`);
+    io.emit("bot-log", { message: `Token1: ${token1}` });
+
     console.log(`Pair Address: ${pair}\n`);
+    io.emit("bot-log", { message: `Pair Address: ${pair}\n` });
 
     let path = [];
 
@@ -56,6 +62,7 @@ async function startBot({ AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey }) {
 
     if (path.length === 0) {
       console.log(`Pair wasn't created with WETH...\n`);
+      io.emit("bot-log", { message: "Pair wasn't created with WETH...\n" });
       return;
     }
     if (path[1] !== tokenToBuy) {
@@ -66,6 +73,7 @@ async function startBot({ AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey }) {
     const token = new ethers.Contract(path[1], IERC20.abi, sniper); // Path[1] is the token to buy
 
     console.log(`Checking liquidity...\n`);
+    io.emit("bot-log", { message: "Checking liquidity...\n" });
 
     //look at reserves, and price from the pair address to make sure there is liquidity, maybe will delete this as pair creation is the liquitiy provision event
 
@@ -73,10 +81,12 @@ async function startBot({ AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey }) {
 
     if (reserves[0] === 0 && reserves[1] === 0) {
       console.log(`Token has no liquidity...`);
+      io.emit("bot-log", { message: "Token has no liquidity..." });
       return;
     }
 
     console.log(`Swapping...\n`);
+    io.emit("bot-log", { message: "Swapping...\n" });
 
     try {
       const amountIn = ethers.utils.parseEther(AMOUNT);
@@ -86,6 +96,7 @@ async function startBot({ AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey }) {
 
       await WETH.approve(uniRouterAddress, amountIn);
       console.log("Approved WETH... Swapping... \n");
+      io.emit("bot-log", { message: "Approved WETH... Swapping... \n" });
 
       const estimatedGas = await uRouter.estimateGas.swapExactTokensForTokens(
         amountIn,
@@ -112,25 +123,41 @@ async function startBot({ AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey }) {
       const symbol = await token.symbol();
       const tokenBalance = await token.balanceOf(sniperAdress);
       console.log("Success!");
+      io.emit("bot-log", { message: "Success!" });
       console.log(
         `Swapped ${AMOUNT} WETH for ${ethers.utils.formatEther(
           tokenBalance
         )} ${symbol}\n`
       );
+      io.emit("bot-log", {
+        message: `Swapped ${AMOUNT} WETH for ${ethers.utils.formatEther(
+          tokenBalance
+        )} ${symbol}\n`,
+      });
       console.log(
         `View on Etherscan: https://etherscan.io/tx/${receipt.transactionHash}\n`
       );
+      io.emit("bot-log", {
+        message: `View on Etherscan: https://etherscan.io/tx/${receipt.transactionHash}\n`,
+      });
     } catch (error) {
       console.log(`Oh no! An error occured while swapping...`);
+      io.emit("bot-log", {
+        message: "Oh no! An error occurred while swapping...",
+      });
       console.error(error);
     }
 
     console.log(`Listening for new pairs created on Uniswap V2...\n`);
+    io.emit("bot-log", {
+      message: "Listening for new pairs created on Uniswap V2...\n",
+    });
   });
 
   console.log(`Listening for new pairs created on Uniswap V2...\n`);
+  io.emit("bot-log", {
+    message: "Listening for new pairs created on Uniswap V2...\n",
+  });
 }
-
-
 
 module.exports = startBot;

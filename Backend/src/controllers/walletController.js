@@ -35,14 +35,19 @@ const startBotEndpoint = async (req, res) => {
     const decryptedPrivateKey = await WalletService.getPrivateKeyForUser(
       userAddress
     );
+    const socketId = req.body.socketId; // You get this from the client
+    const socket = io.sockets.sockets.get(socketId);
 
-    // Start the bot with the user's parameters
-    await startBot({
-      amount,
-      slippage,
-      tokenToBuy,
-      privateKey: decryptedPrivateKey,
-    });
+    if (socket)
+      startBot(
+        {
+          amount,
+          slippage,
+          tokenToBuy,
+          privateKey: decryptedPrivateKey,
+        },
+        socket
+      );
 
     res.json({ message: "Bot started successfully" });
   } catch (error) {

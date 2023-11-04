@@ -11,7 +11,7 @@ $$ |  $$\$$ |  $$ |$$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |$$\$$   ____|
                                                                                                                                    $$ |                          
                                                                                                                                    \__|                          
 `;
-  return <pre className="art">{art}</pre>;
+  return <pre className="art text-semibold">{art}</pre>;
 };
 
 export default ASCIIart;

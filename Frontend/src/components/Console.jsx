@@ -9,9 +9,8 @@ const Console = ({ children }) => {
   }, [children]);
 
   return (
-    <div className="console bg-black text-green-400 font-mono text-sm p-4 rounded-lg shadow-md overflow-auto relative">
+    <div className="h-96 console bg-black text-green-400  text-sm p-4 rounded-lg shadow-md overflow-auto relative">
       <div className="console-content">
-        Test Msg
         {children}
         {/* Invisible element to mark where to scroll to */}
         <div ref={messagesEndRef} />
