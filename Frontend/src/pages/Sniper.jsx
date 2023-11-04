@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Console from "../components/Console";
+import ASCIIart from "../utils/ASCII";
 import { useAccount } from "wagmi";
 
 const Sniper = () => {
@@ -144,6 +146,9 @@ const Sniper = () => {
               Public Key: {wallet.publicKey}
               encrypted Private Key: {wallet.encryptedPrivateKey}
               {/* Toggle to show/hide private key */}
+              <Console>
+                Will display the Backend console output while running bot.js
+              </Console>
             </li>
           ))}
         </ul>

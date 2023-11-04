@@ -61,7 +61,7 @@ const NFT = () => {
 
           <div className="grid grid-cols-2">
             <div className="w-full flex px-8 py-3 justify-between font-semibold border rounded-l-lg bg-green-200 dark:border-gray-100 dark:text-gray-100 hover:bg-green-200">
-              <p className="font-medium">0.01 {""}</p>
+              <p className="font-medium">FREE {""}</p>
 
               <FaEthereum />
             </div>
@@ -146,7 +146,7 @@ const NFT = () => {
                   restricted areas
                 </p>
                 <p className="border-b font-semibold border-slate-300 shadow-sm shadow-white backdrop-blur-2xl w-full rounded-lg  tracki uppercase m-2 p-4">
-                  No gas needed. Simply connect on the{" "}
+                  No gas money needed. Simply connect on the{" "}
                   <strong>Sepolia testnet</strong> to mint.
                 </p>
                 {isMintStarted && !isMinted && (
