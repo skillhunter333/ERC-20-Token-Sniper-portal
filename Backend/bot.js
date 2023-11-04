@@ -131,6 +131,6 @@ async function startBot({ AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey }) {
   console.log(`Listening for new pairs created on Uniswap V2...\n`);
 }
 
-startBot({ AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey });
+
 
 module.exports = startBot;

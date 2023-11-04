@@ -41,7 +41,23 @@ const Sniper = () => {
       console.error("Error creating wallet:", error);
     }
   };
+  ////// need to create backend endpoint to update the users.wallets array so selected wallet will be indexed wallets[0] in database and wallets[0] will be used to snipe
+  const setWallet = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/update-wallets`,
+        {
+          wallets: [...wallets],
+        }
+      );
+    } catch (error) {
+      console.error("Error updating the order of the wallets.array:", error);
+    }
+  };
 
+  /// need a function to get the private keys from encrypted version to decrypted - possibly just get the whole wallets.array with decrypted keys already or use then another type of encryption to send from backend to frontend and decrypt there the newly decrypted keyss
+
+  ////
   const startBot = async () => {
     try {
       const response = await axios.post(
@@ -51,7 +67,6 @@ const Sniper = () => {
           amount,
           slippage,
           tokenToBuy,
-          // Add other required parameters
         }
       );
       console.log(response.data);
@@ -127,6 +142,7 @@ const Sniper = () => {
               onClick={() => selectWallet(index)}
             >
               Public Key: {wallet.publicKey}
+              encrypted Private Key: {wallet.encryptedPrivateKey}
               {/* Toggle to show/hide private key */}
             </li>
           ))}
