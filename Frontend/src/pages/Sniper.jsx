@@ -3,32 +3,31 @@ import axios from "axios";
 import Console from "../components/Console";
 import ASCIIart from "../utils/ASCII";
 import { io } from "socket.io-client";
-const socket = io(`${import.meta.env.VITE_WEBSOCKET_URL}`);
 
 const Sniper = () => {
+  const socket = useRef(null);
   const [amount, setAmount] = useState("");
   const [slippage, setSlippage] = useState("");
   const [tokenToBuy, setTokenToBuy] = useState("");
   const [wallets, setWallets] = useState([]);
-  const [selectedWalletIndex, setSelectedWalletIndex] = useState(null);
+  const [selectedWalletPublicKey, setSelectedWalletPubliKey] = useState("");
   const [logs, setLogs] = useState([]);
-  const ws = useRef(null);
+  const userAddress = "0x3929B2Ff6a288C7454F5B5ffe652e3300126480A";
+  const userId = userAddress;
 
   useEffect(() => {
     // Fetch wallets on component mount
     fetchWallets();
   }, []);
+
   useEffect(() => {
-    ws.current = new WebSocket(`${import.meta.env.VITE_WEBSOCKET_URL}`);
-    ws.current.onmessage = (event) => {
-      const message = event.data;
-      setLogs((prevLogs) => [...prevLogs, message]);
-    };
-    ws.current.onclose = () => console.log("WebSocket disconnected");
-    // Make sure to close the WebSocket connection when the component unmounts
-    return () => {
-      ws.current.close();
-    };
+    socket.current = io(`${import.meta.env.VITE_WEBSOCKET_URL}`, {
+      transports: ["websocket"],
+    });
+    socket.current.emit("register-user", userId);
+    socket.current.on("bot-log", (data) => {
+      setLogs((prevLogs) => [...prevLogs, data.message]);
+    });
   }, []);
 
   const fetchWallets = async () => {
@@ -59,12 +58,13 @@ const Sniper = () => {
     }
   };
   ////// need to create backend endpoint to update the users.wallets array so selected wallet will be indexed wallets[0] in database and wallets[0] will be used to snipe
-  const setWallet = async () => {
+  const setActiveWallet = async () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/update-wallets`,
         {
-          wallets: [...wallets],
+          userAddress: "0x3929B2Ff6a288C7454F5B5ffe652e3300126480A",
+          selectedWalletPublicKey,
         }
       );
     } catch (error) {
@@ -77,7 +77,7 @@ const Sniper = () => {
   ////
 
   ///
-  const startBot = async (socketId) => {
+  const startBot = async () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/startBot`,
@@ -86,27 +86,12 @@ const Sniper = () => {
           amount,
           slippage,
           tokenToBuy,
-          socketId,
         }
       );
       console.log(response.data);
     } catch (error) {
       console.error("Error starting bot:", error);
     }
-  };
-
-  // Listen for bot log events
-  socket.on("bot-log", (data) => {
-    setLogs(data);
-  });
-
-  const selectWallet = (index) => {
-    // This will be used to set the selected wallet as primary for the bot
-    setSelectedWalletIndex(index);
-    // Logic to reorder wallets array and set to state
-    const newWallets = [...wallets];
-    [newWallets[0], newWallets[index]] = [newWallets[index], newWallets[0]];
-    setWallets(newWallets);
   };
 
   return (
@@ -151,7 +136,10 @@ const Sniper = () => {
         </div>
 
         <div className="mb-4">
-          <button onClick={createWallet} className="btn btn-outline btn-accent">
+          <button
+            onClick={createWallet}
+            className="btn border-white border p-2 rounded-tl-xl btn-outline btn-accent"
+          >
             + Create New Wallet
           </button>
         </div>
@@ -163,9 +151,14 @@ const Sniper = () => {
               <li
                 key={wallet.publicKey}
                 className={`p-2 ${
-                  selectedWalletIndex === index ? "bg-blue-200" : ""
+                  selectedWalletPublicKey === wallet.publicKey
+                    ? "bg-sky-300"
+                    : ""
                 }`}
-                onClick={() => selectWallet(index)}
+                onClick={() => {
+                  setSelectedWalletPubliKey(wallet.publicKey);
+                  setActiveWallet();
+                }}
               >
                 Public Key: {wallet.publicKey}
                 {/* Toggle to show/hide private key */}

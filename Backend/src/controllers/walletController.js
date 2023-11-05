@@ -1,6 +1,8 @@
 const WalletService = require("../services/walletService");
 const startBot = require("../../bot");
 
+
+
 // Create a new wallet
 const createWallet = async (req, res) => {
   const { userAddress } = req.body;
@@ -24,36 +26,47 @@ const getUserWallets = async (req, res) => {
     res.status(500).json({ error: "Could not retrieve wallets" });
   }
 };
-//////////
+// Sort a user's wallets to set wallets[0]
+
+const sortWallets = async (req, res) =>{
+  const { userAddress, selectedWalletPublicKey } = req.body;
+    try {
+    const activeWallet = await WalletService.setSelectedWalletFirst(userAddress, selectedWalletPublicKey);
+    res.json(activeWallet);
+  } catch (error) {
+    console.error("Error setting the selected wallet first:", error);
+    res.status(500).json({ error: "Could not set wallets" });
+  }
+
+
+}
 
 const startBotEndpoint = async (req, res) => {
   try {
     const { userAddress, amount, slippage, tokenToBuy } = req.body;
 
     // Validate input...
+    ///////
+    //////
 
     const decryptedPrivateKey = await WalletService.getPrivateKeyForUser(
       userAddress
     );
-    const socketId = req.body.socketId; // You get this from the client
-    const socket = io.sockets.sockets.get(socketId);
-
-    if (socket)
+    
       startBot(
-        {
-          amount,
-          slippage,
-          tokenToBuy,
-          privateKey: decryptedPrivateKey,
-        },
-        socket
+        { userAddress,
+        AMOUNT: amount, 
+        SLIPPAGE: slippage,
+        tokenToBuy,
+        decryptedPrivateKey,
+        }
       );
 
-    res.json({ message: "Bot started successfully" });
+    res.json({ message: "Bot Initiated" });
   } catch (error) {
     console.error("Error starting bot:", error);
     res.status(500).json({ error: "Could not start bot" });
   }
 };
 
-module.exports = { createWallet, getUserWallets, startBot: startBotEndpoint };
+module.exports = { createWallet, getUserWallets, startBotEndpoint, sortWallets };

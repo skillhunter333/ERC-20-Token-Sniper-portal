@@ -4,7 +4,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const walletRoutes = require("./src/routes/walletRoutes");
 const http = require("http"); // Import Node's http module
-const socketIO = require("socket.io");
+const { io, userSocketMap, socketUserMap } = require('./io');
+
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -23,22 +24,44 @@ app.use(
     //optionSuccessStatus:200
   })
 );
+app.options('*', cors()); // This will allow preflight checks for all routes
 
 // route
 app.use("/api", walletRoutes);
 
 //
 const server = http.createServer(app);
-const io = require("socket.io")(server);
-io.on("connection", (socket) => {
-  console.log("a user connected");
-
-  // Your WebSocket event handling here
-
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
+io.attach(server, {
+  cors: {
+    origin: process.env.FRONTEND_DEV, 
+    credentials: true 
+  }
 });
+
+io.on('connection', (socket) => {
+  socket.on('register-user', (userId) => {
+    userSocketMap.set(userId, socket.id);
+    socketUserMap.set(socket.id, userId); 
+  });
+
+  socket.on('disconnect', () => {
+    const userId = socketUserMap.get(socket.id);
+    if (userId) {
+      userSocketMap.delete(userId);
+      socketUserMap.delete(socket.id);
+    }
+  });
+  });
+
+
+  io.on('connect_error', (error) => {
+  console.error('Connection Error:', error);
+});
+
+io.on('connect_timeout', (timeout) => {
+  console.error('Connection Timeout:', timeout);
+});
+
 
 // Listen on the HTTP server, not the express app
 const port = process.env.PORT || 4000;

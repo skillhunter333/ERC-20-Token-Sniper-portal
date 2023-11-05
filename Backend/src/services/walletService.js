@@ -74,4 +74,30 @@ const getPrivateKeyForUser = async (userAddress) => {
   return decryptPrivateKey(encryptedPrivateKey);
 };
 
-module.exports = { createWallet, getUserWallets, getPrivateKeyForUser };
+const mongoose = require("mongoose");
+
+// Function to set selected wallet to first position in db (wallets[0] will be used to snipe)
+const setSelectedWalletFirst = async (userAddress, selectedWalletPublicKey) => {
+  try {
+    const user = await User.findOne({ address: userAddress });
+    if (!user) throw new Error("User not found");
+
+    const walletIndex = user.wallets.findIndex(wallet => wallet.publicKey === selectedWalletPublicKey);
+    if (walletIndex === -1) throw new Error("Wallet not found");
+
+    if (walletIndex === 0) return user.wallets[0].publicKey;  console.log(`the userwallet[0]: ${user.wallets[0].publicKey}`)
+
+    const [selectedWallet] = user.wallets.splice(walletIndex, 1);
+    user.wallets.unshift(selectedWallet);
+    await user.save();
+    console.log(`the userwallet[0]: ${user.wallets[0].publicKey}`)
+    return user.wallets[0];
+  } catch (error) {
+    console.error("Error setting selected wallet:", error);
+    throw error;
+  }
+};
+
+
+
+module.exports = { createWallet, getUserWallets, getPrivateKeyForUser, setSelectedWalletFirst };
