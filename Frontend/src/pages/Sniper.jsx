@@ -135,38 +135,79 @@ const Sniper = () => {
                 e.preventDefault();
                 startBot();
               }}
-              className="flex flex-col space-y-4" // This will stack your inputs vertically
+              className="flex flex-col space-y-4"
             >
-              <input
-                type="text"
-                placeholder="eg. 0.3"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="input text-end pr-4 input-bordered w-32"
-                pattern="^\d+(\.\d+)?$" // regex for a number that may contain a dot
-                required
-              />
+              <div className="flex items-center space-x-2">
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="amountInput"
+                    className="text-sm font-medium text-gray-700"
+                  >
+                    Amount
+                  </label>
+                  <input
+                    id="amountInput"
+                    type="text"
+                    placeholder="eg. 0.3"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="input w-32 text-end pr-4 input-bordered"
+                    pattern="^\d+(\.\d+)?$"
+                    required
+                  />
+                </div>
+                <span className="font-bold ml-8 mt-3 ">WETH</span>
+                <button className="mt-3 border  bg-green-100 font-semibold border-black p-2 rounded-xl">
+                  10%
+                </button>
+                <button className="mt-3 border bg-green-200 font-semibold border-black p-2 rounded-xl">
+                  50%
+                </button>
+                <button className="mt-3 border  bg-green-300 font-semibold border-black p-2 rounded-xl">
+                  100%
+                </button>
+              </div>
 
-              <input
-                type="number" // changed to text to use a pattern for validation
-                placeholder="0.3 for 30%"
-                value={slippage}
-                onChange={(e) => setSlippage(e.target.value)}
-                className="input text-end input-bordered w-32"
-                pattern="^\d+(\.\d+)?$" // same regex here
-                required
-                aria-label="Slippage"
-              />
+              <div className="flex space-x-2">
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="slippageInput"
+                    className="text-sm font-medium text-gray-700"
+                  >
+                    Slippage
+                  </label>
+                  <input
+                    id="slippageInput"
+                    type="text"
+                    placeholder="0.3 for 30%"
+                    value={slippage}
+                    onChange={(e) => setSlippage(e.target.value)}
+                    className="input w-32 text-end input-bordered"
+                    pattern="^\d+(\.\d+)?$"
+                    required
+                  />
+                </div>
+                <span className="font-bold mt-3 ">Slippage in %</span>
+              </div>
 
-              <input
-                type="text"
-                placeholder=" ---Enter the token contract address here---"
-                value={tokenToBuy}
-                onChange={(e) => setTokenToBuy(e.target.value)}
-                className="input text-center input-bordered w-full"
-                pattern="^0x[a-fA-F0-9]{40}$" // regex for ERC-20 token address
-                required
-              />
+              <div className="flex flex-col">
+                <label
+                  htmlFor="tokenToBuyInput"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Token Address
+                </label>
+                <input
+                  id="tokenToBuyInput"
+                  type="text"
+                  placeholder="0x...... ---Enter the token contract address---"
+                  value={tokenToBuy}
+                  onChange={(e) => setTokenToBuy(e.target.value)}
+                  className="input input-bordered w-full"
+                  pattern="^0x[a-fA-F0-9]{40}$"
+                  required
+                />
+              </div>
 
               <div className="flex justify-between items-center">
                 <button
@@ -194,7 +235,7 @@ const Sniper = () => {
                     key={wallet.publicKey}
                     className={`flex justify-items-start border-b-2 text-white text-bold border-white p-2 ${
                       selectedWalletPublicKey === wallet.publicKey
-                        ? "bg-sky-300"
+                        ? "bg-sky-700"
                         : ""
                     }`}
                     onClick={() => {
