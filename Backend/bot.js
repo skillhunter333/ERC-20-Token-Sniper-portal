@@ -84,6 +84,8 @@ uFactory.on("PairCreated", async (token0, token1, pair, event) => {
   
   console.log(`Pair Address: ${pair}\n`);
   emitToUser(userId, { message: `Pair Address: ${pair}\n`});
+  emitToUser(userId, { message: `|\n`});
+
 
   let path = [];
 
@@ -174,6 +176,7 @@ uFactory.on("PairCreated", async (token0, token1, pair, event) => {
 
 console.log(`Listening for new pairs created on Uniswap V2...\n`);
 emitToUser(userId,{ message: "Listening for new pairs created on Uniswap V2...\n"});
+emitToUser(userId,{ message: "|\n"});
 }
 
 module.exports = startBot;

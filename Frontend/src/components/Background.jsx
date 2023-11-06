@@ -21,7 +21,7 @@ const Background = () => {
   };
 
   return (
-    <div className=" bg-slate-900 fixed h-full w-full z-[-1]">
+    <div className=" bg-slate-900 fixed  h-full w-full z-[-1]">
       <div
         style={{
           transform: `translate(-40%, -60%) skewX(-48deg) skewY(14deg) scale(0.675) rotate(0deg) translateZ(0)`,

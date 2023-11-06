@@ -1,3 +1,5 @@
+// src/main.jsx or src/App.jsx
+import "./assets/fonts/fonts.css";
 import { Routes, Route } from "react-router-dom";
 import {
   EthereumClient,

@@ -9,6 +9,7 @@ import contractInterface from "../assets/contract-abi";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaEthereum } from "react-icons/fa";
+import BotsNFT from "../assets/BotsNFT.jpeg";
 
 const NFT = () => {
   const { isConnected } = useAccount();
@@ -46,7 +47,7 @@ const NFT = () => {
       <div className="border-slate-300 rounded-l-lg border-2 border-r-0 border-rounded-l h-7/8 min-h-full min-w-96  shadow-2xl">
         <div className="bg-gradient-to-r from-yellow-500 via-orange-500 to-slate-600 w-full h-full min-h-full min-w-max p-6 rounded-l-lg shadow-md dark:bg-gray-900  dark:text-gray-50">
           <img
-            src="https://res.cloudinary.com/dz6opiy3z/image/upload/v1695987850/coin_q6igyu.jpg"
+            src={BotsNFT}
             alt=""
             className="object-cover object-center w-full rounded-md h-72 dark:bg-gray-500"
           />
