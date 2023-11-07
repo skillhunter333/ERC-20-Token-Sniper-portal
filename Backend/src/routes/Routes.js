@@ -21,6 +21,9 @@ router.post("/update-wallets", walletController.sortWallets);
 // Route to start the bot
 router.post("/startBot", botController.startBotEndpoint);
 
+// Route to stop the bot
+router.post("/stopBot", botController.stopBotEndpoint);
+
 
 
 module.exports = router;

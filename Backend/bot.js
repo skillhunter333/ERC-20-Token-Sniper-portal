@@ -26,8 +26,9 @@ class Bot {
     }
   }
    
-    async startBot({ userAddress, AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey }) {
+    async startBot(config) {
     this.isRunning = true;
+    const { userAddress, AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey } = config;
     
     this.userAddress = userAddress;
     this.AMOUNT = AMOUNT;

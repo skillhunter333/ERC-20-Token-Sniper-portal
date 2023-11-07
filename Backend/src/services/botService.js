@@ -1,18 +1,28 @@
-const bot = require('../bot.js');
+const Bot = require('../bot');
 
 class BotService {
-  static startBot(userId) {
-    bot.start();
-    return true; // assuming the bot starts successfully
+  static botInstances = new Map();
+
+  static startBot(userId, botConfig) {
+    if (this.botInstances.has(userId)) {
+      throw new Error('Bot is already running for this user.');
+    }
+    const bot = new Bot();
+    bot.startBot(botConfig);
+    this.botInstances.set(userId, bot);
+    return true;
   }
 
   static stopBot(userId) {
-    // ... logic to ensure the correct bot is stopped based on userId ...
-    bot.stop();
-    return true; // assuming the bot stops successfully
+    const bot = this.botInstances.get(userId);
+    if (!bot) {
+      throw new Error('No bot running for this user.');
+    }
+    bot.stopBot();
+    this.botInstances.delete(userId);
+    return true;
   }
 
-  // ... other service methods ...
 }
 
 module.exports = BotService;
