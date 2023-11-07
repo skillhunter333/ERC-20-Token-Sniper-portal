@@ -2,7 +2,7 @@ const dotenv = require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const walletRoutes = require("./src/routes/walletRoutes");
+const Routes = require("./src/routes/Routes");
 const http = require("http"); // Import Node's http module
 const { io, userSocketMap, socketUserMap } = require('./io');
 
@@ -27,7 +27,7 @@ app.use(
 app.options('*', cors()); // This will allow preflight checks for all routes
 
 // route
-app.use("/api", walletRoutes);
+app.use("/api", Routes);
 
 //
 const server = http.createServer(app);
@@ -62,8 +62,6 @@ io.on('connect_timeout', (timeout) => {
   console.error('Connection Timeout:', timeout);
 });
 
-
-// Listen on the HTTP server, not the express app
 const port = process.env.PORT || 4000;
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);

@@ -1,5 +1,4 @@
 const WalletService = require("../services/walletService");
-const startBot = require("../../bot");
 
 
 
@@ -41,32 +40,6 @@ const sortWallets = async (req, res) =>{
 
 }
 
-const startBotEndpoint = async (req, res) => {
-  try {
-    const { userAddress, amount, slippage, tokenToBuy } = req.body;
 
-    // Validate input...
-    ///////
-    //////
 
-    const decryptedPrivateKey = await WalletService.getPrivateKeyForUser(
-      userAddress
-    );
-    
-      startBot(
-        { userAddress,
-        AMOUNT: amount, 
-        SLIPPAGE: slippage,
-        tokenToBuy,
-        decryptedPrivateKey,
-        }
-      );
-
-    res.json({ message: "Bot Initiated" });
-  } catch (error) {
-    console.error("Error starting bot:", error);
-    res.status(500).json({ error: "Could not start bot" });
-  }
-};
-
-module.exports = { createWallet, getUserWallets, startBotEndpoint, sortWallets };
+module.exports = { createWallet, getUserWallets, sortWallets };

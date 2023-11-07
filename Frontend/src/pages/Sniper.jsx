@@ -31,6 +31,30 @@ const Sniper = () => {
     fetchWallets();
   }, []);
 
+  const stopBot = async () => {
+    try {
+      // Send an HTTP POST request to the server to stop the bot
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/stopBot`,
+        {
+          userId: userAddress, // or any other identifier necessary
+        }
+      );
+
+      // Check if the server successfully processed the stop request
+      if (response.data.success) {
+        setIsBotRunning(false);
+        setLogs([...logs, "Bot has been stopped."]);
+        // Other cleanup here
+      } else {
+        // Handle the situation where the server didn't stop the bot for some reason
+        console.error("Server could not stop the bot:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error sending stop request:", error);
+    }
+  };
+
   async function getBalances(address) {
     const WETH = new ethers.Contract(WETHaddress, ERC20.abi, provider);
 
@@ -200,10 +224,10 @@ const Sniper = () => {
                 <input
                   id="tokenToBuyInput"
                   type="text"
-                  placeholder="0x...... ---Enter the token contract address---"
+                  placeholder=" ---Paste the token contract address here---"
                   value={tokenToBuy}
                   onChange={(e) => setTokenToBuy(e.target.value)}
-                  className="input input-bordered w-full"
+                  className="input text-center input-bordered w-full"
                   pattern="^0x[a-fA-F0-9]{40}$"
                   required
                 />
@@ -221,6 +245,7 @@ const Sniper = () => {
                 <button
                   type="submit" // this button will submit the form
                   className="btn btn-primary  text-white text-bold h-12 w-full border-white border p-2 bg-gradient-to-r  from-green-700 to-green-600 rounded-tr-xl btn-outline btn-accent"
+                  onClick={startBot}
                 >
                   ----Start Bot----
                 </button>
@@ -271,29 +296,32 @@ const Sniper = () => {
                     <span className="p-2 bg-slate-800 mb-4 rounded-r-lg text-xs text-white">
                       {wallet.ethBalance ? wallet.wethBalance : "0.000"} ETH
                     </span>
-                    <span className=" flex content-end">
+                    <button className="ml-8 mt-2">
                       <BsFillTrash3Fill />
-                    </span>
+                    </button>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
-          <div className="w-1/2">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod,
-            quaerat?
+          <div className="w-1/3">
+            <h3 className="font-semibold text-xl">Anti bot meassures </h3>
           </div>
+          <div className="w-1/3">Sell Options</div>
         </div>
         <Console>
           <div className="font-CourierPrime-Regular text-sm pt-2 ">
             <ASCIIart />
           </div>
           <div className="text-semibold font-CourierPrime-Regular text-green-500 text-lg">
-            Start the bot after inserting all required fields - the selected
-            wallet will be used to execute the transaction - make sure to
-            provide enough ETH to cover for gas fees. WETH is used to buy the
-            specified token
-            ---------------------------------------------------------------------------------------
+            The selected wallet will be used to execute the transaction - make
+            sure to{" "}
+            <span className="text-sky-700 underline">
+              {" "}
+              provide enough ETH to cover for gas fees and enough WETH to buy{" "}
+            </span>{" "}
+            the specified token
+            -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
           </div>
           {logs.map((log, index) => (
             <div key={index}>{log}</div>
