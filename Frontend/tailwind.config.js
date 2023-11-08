@@ -6,5 +6,5 @@ export default {
         'CourierPrime-Regular': ['CourierPrime-Regular', 'sans-serif'],
       },},
   },
-  plugins: [],
+  plugins: [require("daisyui")],
 };

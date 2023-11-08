@@ -26,11 +26,11 @@ class Bot {
     }
   }
    
-    async startBot({ userId, AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey }) {
+    async startBot({ userId, AMOUNT, slippage, tokenToBuy, decryptedPrivateKey }) {
     this.isRunning = true;
     
     this.AMOUNT = AMOUNT;
-    this.SLIPPAGE = SLIPPAGE;
+    this.slippage = slippage;
     this.tokenToBuy = tokenToBuy;
     this.decryptedPrivateKey = decryptedPrivateKey;
   
@@ -38,7 +38,6 @@ class Bot {
     this.sniper = this.wallet.connect(this.provider);
     this.sniperAdress = this.wallet.address;
     this.userId = userId
-    this.slippage = this.SLIPPAGE * 10; // to avoid type-conflicts when calculating with BigNumbers
 
     this.socketId = userSocketMap.get(this.userId);
     this.socket = io.sockets.sockets.get(this.socketId);

@@ -9,10 +9,9 @@ const startBotEndpoint = async (req, res) => {
 
     const decryptedPrivateKey = await WalletService.getPrivateKeyForUser(userId);
     let AMOUNT = amount;
-    let SLIPPAGE = slippage;
+  
     
-
-    const success = BotService.startBot({userId, AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey });
+    const success = BotService.startBot({userId, AMOUNT, slippage, tokenToBuy, decryptedPrivateKey });
 
     if (success) {
       res.json({ success: true, message: "Bot initiated" });
