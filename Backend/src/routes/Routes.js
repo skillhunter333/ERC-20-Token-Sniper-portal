@@ -12,7 +12,7 @@ router.post("/createWallet", walletController.createWallet);
 router.get("/getUserWallets", walletController.getUserWallets);
 
 // Sort the wallets array, so selected wallet is at wallets[0] which will be sniped from
-router.post("/update-wallets", walletController.sortWallets);
+router.post("/set-active-wallet", walletController.sortWallets);
 
 
 //// Bot routes

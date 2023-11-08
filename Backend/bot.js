@@ -26,11 +26,9 @@ class Bot {
     }
   }
    
-    async startBot(config) {
+    async startBot({ userId, AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey }) {
     this.isRunning = true;
-    const { userAddress, AMOUNT, SLIPPAGE, tokenToBuy, decryptedPrivateKey } = config;
     
-    this.userAddress = userAddress;
     this.AMOUNT = AMOUNT;
     this.SLIPPAGE = SLIPPAGE;
     this.tokenToBuy = tokenToBuy;
@@ -39,7 +37,7 @@ class Bot {
     this.wallet = new ethers.Wallet(this.decryptedPrivateKey, this.provider);
     this.sniper = this.wallet.connect(this.provider);
     this.sniperAdress = this.wallet.address;
-    this.userId = this.userAddress;
+    this.userId = userId
     this.slippage = this.SLIPPAGE * 10; // to avoid type-conflicts when calculating with BigNumbers
 
     this.socketId = userSocketMap.get(this.userId);
@@ -181,8 +179,11 @@ this.emitToUser({ message: "|\n"});
 }
 
 
+
+
 stopBot() {
-  if (!this.isRunning) return;
+  return new Promise((resolve, reject) => {
+     if (!this.isRunning) return;
 
   if (this.pairCreatedListener) {
     this.uFactory.removeListener("PairCreated", this.pairCreatedListener);
@@ -191,11 +192,10 @@ stopBot() {
 
     this.isRunning = false;
     this.emitToUser("STOP");
-    this.socket.emit('disconnect');
-    
-    
-  }
-
-}
+    //this.socket.emit('disconnect');
+    resolve();
+  });
+};
+};
 const botInstance = new Bot();
-module.exports = botInstance;
+module.exports = Bot ;

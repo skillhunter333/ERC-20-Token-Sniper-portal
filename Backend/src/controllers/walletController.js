@@ -4,9 +4,9 @@ const WalletService = require("../services/walletService");
 
 // Create a new wallet
 const createWallet = async (req, res) => {
-  const { userAddress } = req.body;
+  const { userId } = req.body;
   try {
-    const newWallet = await WalletService.createWallet(userAddress);
+    const newWallet = await WalletService.createWallet(userId);
     res.json(newWallet);
   } catch (error) {
     console.error("Error creating wallet:", error);
@@ -16,9 +16,9 @@ const createWallet = async (req, res) => {
 
 // Get a user's wallets
 const getUserWallets = async (req, res) => {
-  const { userAddress } = req.query;
+  const { userId } = req.query;
   try {
-    const userWallets = await WalletService.getUserWallets(userAddress);
+    const userWallets = await WalletService.getUserWallets(userId);
     res.json(userWallets);
   } catch (error) {
     console.error("Error retrieving user wallets:", error);
@@ -28,9 +28,9 @@ const getUserWallets = async (req, res) => {
 // Sort a user's wallets to set wallets[0]
 
 const sortWallets = async (req, res) =>{
-  const { userAddress, selectedWalletPublicKey } = req.body;
+  const { userId, walletPublicKey } = req.body;
     try {
-    const activeWallet = await WalletService.setSelectedWalletFirst(userAddress, selectedWalletPublicKey);
+    const activeWallet = await WalletService.setSelectedWalletFirst(userId, walletPublicKey);
     res.json(activeWallet);
   } catch (error) {
     console.error("Error setting the selected wallet first:", error);

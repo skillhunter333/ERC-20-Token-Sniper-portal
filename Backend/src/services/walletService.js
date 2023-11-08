@@ -1,12 +1,14 @@
 const crypto = require("crypto");
 const { Wallet, utils } = require("ethers");
+const mongoose = require("mongoose");
+
 
 const User = require("../models/userSchema");
 
 const ENCRYPTION_SECRET = process.env.ENCRYPTION_SECRET;
 
 // Create and save a new wallet for a user, creating the user if not found
-const createWallet = async (userAddress) => {
+const createWallet = async (userId) => {
   try {
     // Create a new Ethereum wallet
     const wallet = Wallet.createRandom();
@@ -17,12 +19,12 @@ const createWallet = async (userAddress) => {
     encryptedPrivateKey += cipher.final("hex");
 
     // Find the user by their address
-    let user = await User.findOne({ address: userAddress });
+    let user = await User.findOne({ address: userId });
 
     // If user doesn't exist, create a new user entry
     if (!user) {
       user = new User({
-        address: userAddress,
+        address: userId,
         wallets: [],
       });
     }
@@ -42,9 +44,9 @@ const createWallet = async (userAddress) => {
 };
 
 // Retrieve user's wallets
-const getUserWallets = async (userAddress) => {
+const getUserWallets = async (userId) => {
   try {
-    const user = await User.findOne({ address: userAddress });
+    const user = await User.findOne({ address: userId });
     if (user) {
       return user.wallets;
     } else {
@@ -66,23 +68,22 @@ const decryptPrivateKey = (encryptedPrivateKey) => {
   return decrypted;
 };
 
-const getPrivateKeyForUser = async (userAddress) => {
-  const user = await User.findOne({ address: userAddress });
+const getPrivateKeyForUser = async (userId) => {
+  const user = await User.findOne({ address: userId });
   if (!user) throw new Error("User not found");
   // Assuming the first wallet is the one to use
   const encryptedPrivateKey = user.wallets[0].encryptedPrivateKey;
   return decryptPrivateKey(encryptedPrivateKey);
 };
 
-const mongoose = require("mongoose");
 
 // Function to set selected wallet to first position in db (wallets[0] will be used to snipe)
-const setSelectedWalletFirst = async (userAddress, selectedWalletPublicKey) => {
+const setSelectedWalletFirst = async (userId, walletPublicKey) => {
   try {
-    const user = await User.findOne({ address: userAddress });
+    const user = await User.findOne({ address: userId });
     if (!user) throw new Error("User not found");
 
-    const walletIndex = user.wallets.findIndex(wallet => wallet.publicKey === selectedWalletPublicKey);
+    const walletIndex = user.wallets.findIndex(wallet => wallet.publicKey === walletPublicKey);
     if (walletIndex === -1) throw new Error("Wallet not found");
 
     if (walletIndex === 0) return user.wallets[0].publicKey;  console.log(`the userwallet[0]: ${user.wallets[0].publicKey}`)
