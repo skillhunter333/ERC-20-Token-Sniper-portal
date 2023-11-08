@@ -9,6 +9,7 @@ import {
   BsFillTrash3Fill,
   BsFillSignStopFill,
 } from "react-icons/bs";
+import { IoReload } from "react-icons/io5";
 import { toast } from "react-toastify";
 import etherscan from "../assets/etherscan.svg";
 import { ethers } from "ethers";
@@ -32,6 +33,8 @@ const Sniper = () => {
 
   const [selectedWalletPublicKey, setSelectedWalletPublicKey] = useState("");
   const [logs, setLogs] = useState([]);
+
+  const [method, setMethod] = useState("");
 
   /////////////Functions
 
@@ -60,7 +63,7 @@ const Sniper = () => {
         { userId }
       );
       console.log(response.data); // handle
-      toast.success("Bot stopped successfully!");
+      toast.success("Stopping this Bot Instance!");
     } catch (error) {
       toast.error(
         `Error stopping bot: ${error.response?.data?.message || error.message}`
@@ -179,15 +182,28 @@ const Sniper = () => {
     toast("Copied wallet address to clipboard!");
   };
 
-  ///////////////
+  const handleReset = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/stopBot`,
+        { userId }
+      );
+      console.log(response.data); // handle
+      toast.success("Clearing Bot Instances for user... Resetting bot..");
+    } catch (error) {
+      toast.error(
+        `Error stopping bot: ${error.response?.data?.message || error.message}`
+      );
+    }
+  };
+
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
+  ////////////////////////////////
+
   useEffect(() => {
     handleFetchWallets();
-    // When the component unmounts, disconnect the socket
-    return () => {
-      if (socket.current) {
-        socket.current.disconnect();
-      }
-    };
   }, []);
 
   useEffect(() => {
@@ -202,7 +218,6 @@ const Sniper = () => {
         transports: ["websocket"],
       });
     }
-
     const registerUser = () => {
       socket.current.emit("register-user", userId);
     };
@@ -214,12 +229,16 @@ const Sniper = () => {
     socket.current.on("connect", registerUser);
     socket.current.on("bot-log", handleBotLog);
 
-    // If the user ID changes, we need to re-register the user
-    registerUser();
-
+    if (userId) {
+      registerUser();
+    }
     return () => {
       if (socket.current) {
         socket.current.off("bot-log", handleBotLog);
+        socket.current.emit("unregister", userId);
+        if (socket.current.connected) {
+          socket.current.disconnect();
+        }
       }
     };
   }, [userId]);
@@ -315,7 +334,7 @@ const Sniper = () => {
                   <input
                     id="slippageInput"
                     type="text"
-                    placeholder="0.3 for 30%"
+                    placeholder="eg. 30%"
                     value={slippage}
                     onChange={(e) => setSlippage(e.target.value)}
                     className="input w-32 text-end border-purple-950 border-2 bg-slate-950 rounded-tl-xl"
@@ -323,14 +342,17 @@ const Sniper = () => {
                     required
                   />
                 </div>
-                <span className="font-bold ml-2 text-slate-400 ">
+                <span className="font-bold ml-2 text-slate-400 flex-grow">
                   Slippage in %
                 </span>
-                <div className="bg-slate-900 border border-purple-950">
+                <div className="bg-slate-900 border-2 border-purple-950 w-1/2 flex justify-between items-center rounded-t-lg">
                   <button
-                    className="text-red-800 ml-32"
-                    onClick={handleStopBot}
+                    className="text-slate-300 ml-6 p-2"
+                    onClick={handleReset}
                   >
+                    <IoReload size={28} />
+                  </button>
+                  <button className="text-red-800 p-2" onClick={handleStopBot}>
                     <BsFillSignStopFill size={42} />
                   </button>
                 </div>
@@ -374,8 +396,19 @@ const Sniper = () => {
               <ul>{renderWallets()}</ul>
             </div>
           </div>
-          <div className="w-1/3">
+          <div id="second row" className="w-1/3">
             <h3 className="font-semibold text-xl">Anti bot meassures </h3>
+            <div>
+              <label>
+                Methods:
+                <select onChange={handleChange}>
+                  <option value="enableTrading()">enableTrading</option>
+                  <option value="startTrading()">startTrading</option>
+                  <option value="activateTrading()">activateTrading()</option>
+                  <option value="Text">Custom...</option>
+                </select>
+              </label>
+            </div>
           </div>
           <div className="w-1/3">Sell Options</div>
         </div>
