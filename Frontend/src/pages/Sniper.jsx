@@ -141,10 +141,10 @@ const Sniper = () => {
         `${import.meta.env.VITE_API_URL}/api/set-active-wallet`,
         {
           userId,
-          walletPublicKey,
+          key,
         }
       );
-      toast.success("Active wallet set successfully!");
+      toast.success("Selected wallet set as active wallet successfully!");
     } catch (error) {
       toast.error(
         `Error setting active wallet: ${
@@ -236,7 +236,7 @@ const Sniper = () => {
                         : ""
                     }`}
         onClick={() => {
-          handleSetActiveWallet(key);
+          handleSetActiveWallet(wallet.publicKey);
         }}
       >
         <span>
@@ -343,7 +343,7 @@ const Sniper = () => {
                   placeholder=" ---Paste the token contract address here---"
                   value={tokenToBuy}
                   onChange={(e) => setTokenToBuy(e.target.value)}
-                  className="input text-center input-bordered w-full border-purple-950 border-2 bg-slate-950"
+                  className="input text-center input-bordered w-full text-slate-300 border-purple-950 border-2 bg-slate-950"
                   pattern="^0x[a-fA-F0-9]{40}$"
                   required
                 />

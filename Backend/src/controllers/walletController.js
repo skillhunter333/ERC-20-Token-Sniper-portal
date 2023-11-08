@@ -28,9 +28,9 @@ const getUserWallets = async (req, res) => {
 // Sort a user's wallets to set wallets[0]
 
 const sortWallets = async (req, res) =>{
-  const { userId, walletPublicKey } = req.body;
+  const { userId, key } = req.body;
     try {
-    const activeWallet = await WalletService.setSelectedWalletFirst(userId, walletPublicKey);
+    const activeWallet = await WalletService.setSelectedWalletFirst(userId, key);
     res.json(activeWallet);
   } catch (error) {
     console.error("Error setting the selected wallet first:", error);

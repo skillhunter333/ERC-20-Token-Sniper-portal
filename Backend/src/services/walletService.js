@@ -78,12 +78,12 @@ const getPrivateKeyForUser = async (userId) => {
 
 
 // Function to set selected wallet to first position in db (wallets[0] will be used to snipe)
-const setSelectedWalletFirst = async (userId, walletPublicKey) => {
+const setSelectedWalletFirst = async (userId, key) => {
   try {
     const user = await User.findOne({ address: userId });
     if (!user) throw new Error("User not found");
 
-    const walletIndex = user.wallets.findIndex(wallet => wallet.publicKey === walletPublicKey);
+    const walletIndex = user.wallets.findIndex(wallet => wallet.publicKey === key);
     if (walletIndex === -1) throw new Error("Wallet not found");
 
     if (walletIndex === 0) return user.wallets[0].publicKey;  console.log(`the userwallet[0]: ${user.wallets[0].publicKey}`)
