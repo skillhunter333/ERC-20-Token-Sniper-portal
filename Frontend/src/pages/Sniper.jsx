@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import WalletList from "../components/WalletList";
 import useWallets from "../hooks/useWallets";
 import CustomSelectInput from "../utils/MethodSelectInput";
-import Infobox from "../utils/Infobox";
+import SelectFlashbot from "../components/selectFlashbot";
 
 const userId = "0x3929B2Ff6a288C7454F5B5ffe652e3300126480A";
 
@@ -224,16 +224,16 @@ const Sniper = () => {
               </ul>
             </div>
           </div>
-          <div id="second row" className="w-1/3 flex-col bg-sky-300">
-            <div className="h-2/3 w-full">
-              <h3 className="font-semibold text-xl">Anti bot meassures </h3>
+          <div id="second-row" className="w-1/3 flex flex-col pt-8 mx-4 p-4">
+            <div className="flex-grow h-40 items-end">
               <CustomSelectInput />
-              <Infobox />
             </div>
-            <div className="bg-red-400 w-full h-1/3">
-              Gas Options / Flashbot inc. Bribe
+            <div className=" h-2/3 border-t-2 border-slate-900 w-full">
+              <SelectFlashbot />
             </div>
+            <div className="flex flex-grow h-full border-t-2 border-black"></div>
           </div>
+
           <div id="third row" className="w-1/3 flex bg-purple-400">
             <div>Sell Options</div>
 

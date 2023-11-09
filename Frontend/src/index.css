@@ -8,6 +8,17 @@
   }
 }
 
+@layer components {
+  .toggle .toggle-mark {
+      background-color: black; 
+      
+    }
+  
+    .toggle:checked {
+      background-color: #2964bc; 
+    }
+}
+
 @keyframes blink {
   0%,
   100% {

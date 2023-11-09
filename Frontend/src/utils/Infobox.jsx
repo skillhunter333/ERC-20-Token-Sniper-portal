@@ -1,10 +1,12 @@
 import React from "react";
 
-const Infobox = () => {
+const Infobox = ({ title, children }) => {
   return (
     <div className="dropdown dropdown-end">
-      Use method to snipe
-      <label tabIndex={0} className="btn btn-circle btn-ghost btn-xs text-info">
+      <label
+        tabIndex={0}
+        className="btn btn-circle btn-ghost btn-lg text-sky-700 hover:text-red-400"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -24,11 +26,12 @@ const Infobox = () => {
         className="card compact dropdown-content z-[1] shadow bg-base-100 rounded-box w-64"
       >
         <div className="card-body">
-          <h2 className="card-title">You needed more info?</h2>
-          <p>Here is a description!</p>
+          <h2 className="card-title">{title}</h2>
+          <p>{children}</p>
         </div>
       </div>
     </div>
   );
 };
+
 export default Infobox;

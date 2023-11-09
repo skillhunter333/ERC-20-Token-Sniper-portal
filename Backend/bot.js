@@ -64,6 +64,7 @@ class Bot {
   this.emitToUser( {message: `|\n`});  
   this.emitToUser( {message: `Wallet to snipe with: ${this.shortAddress} |||  Balances: ${ethers.utils.formatEther(this.wethBalance)} WETH  ||  ${ethers.utils.formatEther(this.ethBalance)} ETH  \n`});
   this.emitToUser( {message: `\n Token to snipe: ${this.tokenToBuy}\n`});
+  this.emitToUser( {message: `Amount: ${this.AMOUNT} WETH\n`});
   this.emitToUser( {message: `|\n`});  
 
 
@@ -187,11 +188,10 @@ stopBot() {
   if (this.pairCreatedListener) {
     this.uFactory.removeListener("PairCreated", this.pairCreatedListener);
     this.pairCreatedListener = null; 
+    this.emitToUser({ message: " Stopped Bot..\n"});
   }
 
     this.isRunning = false;
-    this.emitToUser("STOP");
-    //this.socket.emit('disconnect');
     resolve();
   });
 };
