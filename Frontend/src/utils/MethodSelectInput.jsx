@@ -30,8 +30,8 @@ function CustomSelectInput() {
             onChange={handleCheckboxChange}
             className="toggle  fill-slate-500"
           />
-          <span className="ml-8 text-blue-950">
-            Use a method to snipe instead
+          <span className="ml-8 text-blue-950 underline">
+            Use method snipe instead
           </span>
         </label>
         <Infobox title="Method Snipe">

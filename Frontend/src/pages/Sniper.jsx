@@ -11,6 +11,7 @@ import WalletList from "../components/WalletList";
 import useWallets from "../hooks/useWallets";
 import CustomSelectInput from "../utils/MethodSelectInput";
 import SelectFlashbot from "../components/selectFlashbot";
+import Sell from "../components/Sell";
 
 const userId = "0x3929B2Ff6a288C7454F5B5ffe652e3300126480A";
 
@@ -234,10 +235,8 @@ const Sniper = () => {
             <div className="flex flex-grow h-full border-t-2 border-black"></div>
           </div>
 
-          <div id="third row" className="w-1/3 flex bg-purple-400">
-            <div>Sell Options</div>
-
-            <div className="h-full bg-inherit"></div>
+          <div id="third row" className="w-1/3 flex mt-2 pt-8 mx-4 p-4 ">
+            <Sell />
           </div>
         </div>
         <Console>

@@ -20,8 +20,8 @@ const SelectFlashbot = () => {
             onChange={handleCheckboxChange}
             className="toggle accent-black stroke-black ring-offset-black caret-black fill-slate-500"
           />
-          <span className="ml-8 text-blue-950 font-semibold">
-            Use a Flashbot Transaction
+          <span className="ml-8 text-blue-950 underline font-semibold">
+            Use Flashbot Transaction
           </span>
         </label>
         <Infobox title="Method Snipe">
@@ -31,9 +31,7 @@ const SelectFlashbot = () => {
         </Infobox>
       </div>
       <div className="flex justify-end mt-2">
-        <span className="text-slate-400 text-md mr-6">
-          Set the bribe to use
-        </span>
+        <span className="text-slate-400 text-md mr-6">Set bribe</span>
         <input
           type="number"
           className={`input w-32 h-8 text-slate-300 text-end border-purple-950 border-2 bg-slate-950 rounded-none rounded-tl-xl ${

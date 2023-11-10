@@ -61,11 +61,18 @@ class Bot {
   this.firstThree = this.wallet.address.slice(0, 3);
   this.lastFour = this.wallet.address.slice(-4);
   this.shortAddress = this.firstThree + "..." + this.lastFour;
+
+  this.emitToUser( {message: `|\n`});  
+  this.emitToUser( {message: `BOT initiated\n`});
   this.emitToUser( {message: `|\n`});  
   this.emitToUser( {message: `Wallet to snipe with: ${this.shortAddress} |||  Balances: ${ethers.utils.formatEther(this.wethBalance)} WETH  ||  ${ethers.utils.formatEther(this.ethBalance)} ETH  \n`});
   this.emitToUser( {message: `\n Token to snipe: ${this.tokenToBuy}\n`});
   this.emitToUser( {message: `Amount: ${this.AMOUNT} WETH\n`});
-  this.emitToUser( {message: `|\n`});  
+  this.emitToUser( {message: `|\n`}); 
+  this.emitToUser( {message: `Slippage: ${this.slippage} %\n`});
+  this.emitToUser( {message: `Transaction type: \n`});
+  this.emitToUser( {message: `GAS: \n`});
+
 
 
 
