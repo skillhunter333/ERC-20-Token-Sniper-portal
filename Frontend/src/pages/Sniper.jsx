@@ -12,6 +12,7 @@ import useWallets from "../hooks/useWallets";
 import CustomSelectInput from "../utils/MethodSelectInput";
 import SelectFlashbot from "../components/selectFlashbot";
 import Sell from "../components/Sell";
+import Gassettings from "../components/Gassettings";
 
 const userId = "0x3929B2Ff6a288C7454F5B5ffe652e3300126480A";
 
@@ -133,13 +134,13 @@ const Sniper = () => {
                 <span className="font-bold  text-slate-400 text-center pl-2 ">
                   WETH
                 </span>
-                <button className=" w-1/3 mx-1 text-center ml-2 h-8  px-1 pb-1 bg-green-800 font-semibold border-purple-950 text-slate-500 border-2 rounded-none rounded-bl-lg">
+                <button className=" w-1/3  text-center ml-2 h-8  px-1 pb-1 bg-green-800 font-semibold border-purple-950 text-slate-500 border-2 rounded-none rounded-bl-lg hover:text-slate-300 hover:border-4">
                   10 %
                 </button>
-                <button className="border-2 h-8 w-1/2 text-slate-500 bg-green-900 border-purple-950 font-semibold px-1 pb-1 ">
+                <button className="border-2 h-8 w-1/2 text-slate-500 bg-green-900 border-purple-950 font-semibold px-1 pb-1 hover:text-slate-300 hover:border-4 ">
                   50 %
                 </button>
-                <button className="border-2 h-8 mx-1 w-full text-slate-500 border-purple-950  bg-green-950 font-semibold  px-1 pb-1 rounded-none rounded-tr-lg">
+                <button className="border-2 h-8  w-full text-slate-500 border-purple-950  bg-green-950 font-semibold  px-1 pb-1 rounded-none rounded-tr-lg hover:text-slate-300 hover:border-4">
                   100 %
                 </button>
               </div>
@@ -232,7 +233,9 @@ const Sniper = () => {
             <div className=" h-2/3 border-t-2 border-slate-900 w-full">
               <SelectFlashbot />
             </div>
-            <div className="flex flex-grow h-full border-t-2 border-black"></div>
+            <div className="flex flex-grow h-full border-t-2 border-black">
+              <Gassettings />
+            </div>
           </div>
 
           <div id="third row" className="w-1/3 flex mt-2 pt-8 mx-4 p-4 ">

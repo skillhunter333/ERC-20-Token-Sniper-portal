@@ -20,7 +20,11 @@ const SelectFlashbot = () => {
             onChange={handleCheckboxChange}
             className="toggle accent-black stroke-black ring-offset-black caret-black fill-slate-500"
           />
-          <span className="ml-8 text-blue-950 underline font-semibold">
+          <span
+            className={`${
+              isBribeDisabled ? "text-purple-700" : "text-pink-700"
+            } ml-8 font-bold bg-slate-900 h-8 px-16 rounded-xl hover:underline`}
+          >
             Use Flashbot Transaction
           </span>
         </label>

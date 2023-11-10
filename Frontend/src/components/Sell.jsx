@@ -11,10 +11,9 @@ const Sell = () => {
   };
 
   const handleSliderChange = (e) => {
-    const sliderValue = e.target.value;
-    handlePercentage(sliderValue);
+    const invertedValue = 100 - e.target.value;
+    handlePercentage(invertedValue);
   };
-
   const handleSellAmountChange = (e) => {
     const inputAmount = e.target.validity.valid ? e.target.value : sellAmount;
     setSellAmount(inputAmount);
@@ -28,14 +27,14 @@ const Sell = () => {
             <button
               key={percentage}
               onClick={() => handlePercentage(percentage)}
-              className={`border-2 h-8 mx-1 ${
+              className={`border-2 h-8  ${
                 percentage === "100"
-                  ? "flex-grow w-full rounded-tl-lg bg-red-950"
+                  ? "flex-grow w-full rounded-tl-lg bg-red-950 "
                   : "w-1/2"
               }
               ${
-                percentage === "50" ? "bg-red-900" : "bg-red-800"
-              } text-slate-500 border-purple-950  font-semibold px-1 pb-1 rounded-none`}
+                percentage === "10" ? "bg-red-800 mr-2" : "bg-red-900"
+              } text-slate-500 border-purple-950  font-semibold px-1 pb-1 rounded-none hover:text-slate-300 hover:border-4`}
             >
               {percentage} %
             </button>
@@ -54,15 +53,15 @@ const Sell = () => {
           />
         </div>
 
-        <div className="mt-2 w-full transform scale-x-[-1]">
+        <div className="w-full transform scale-x-[-1]">
           <input
             type="range"
             min={0}
             max={100}
             value={parseInt((sellAmount / totalTokens) * 100) || 0}
             onChange={handleSliderChange}
-            className="range range-xs w-full"
-          />{" "}
+            className="range range-xs"
+          />
         </div>
 
         <div className="flex flex-col mt-4 space-y-2">
@@ -78,9 +77,19 @@ const Sell = () => {
               pattern="^\d+(\.\d+)?$"
             />
           </div>
-          <button className="text-slate-950 text-bold h-12 w-32 border-slate-300 border p-2 bg-gradient-to-r from-red-950 to-red-900 rounded-t-xl">
-            Sell
-          </button>
+          <div className="flex pt-4">
+            <button className="text-slate-400 text-bold h-12 w-32 border-slate-900 border p-2 bg-gradient-to-r from-red-950 to-red-900 rounded-tl-xl">
+              Sell
+            </button>
+            <div className="bg-slate-900 flex flex-grow space-x-4 italic items-center justify-center h-12 text-purple-700 font-semibold text-lg">
+              <span>P/L</span>
+              <span>0.00</span>
+              <span>%</span>
+              <span className="px-8">|</span>
+              <span>0.00</span>
+              <span>USD</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
