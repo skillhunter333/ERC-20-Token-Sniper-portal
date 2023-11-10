@@ -22,28 +22,35 @@ function CustomSelectInput() {
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center justify-start font-semibold text-lg ">
-        <label className="inline-flex bg-slate-900 h-6 rounded-l-3xl items-center mr-4">
-          <input
-            type="checkbox"
-            checked={!isDropdownDisabled}
-            onChange={handleCheckboxChange}
-            className="toggle  fill-slate-500"
-          />
-          <span
-            className={`${
-              isDropdownDisabled ? "text-purple-700" : "text-pink-700"
-            } ml-4 font-bold  h-8 px-16 rounded-xl hover:underline`}
-          >
-            method snipe
-          </span>
-        </label>
+      <div className="flex items-center justify-between font-semibold text-lg ">
+        <div className="flex items-center">
+          <label className="inline-flex bg-slate-900 h-6 rounded-l-3xl items-center">
+            <input
+              type="checkbox"
+              checked={!isDropdownDisabled}
+              onChange={handleCheckboxChange}
+              className="toggle fill-slate-500"
+            />
+            <span
+              className={`${
+                isDropdownDisabled ? "text-purple-700" : "text-pink-700"
+              } mx-4 w-48 font-bold h-8 px-8 rounded-xl hover:underline`}
+            >
+              method snipe
+            </span>
+          </label>
+          <Infobox title="Method Snipe">
+            Used to circumnavigate anti-bot measures by sending the buy
+            transaction upon the corresponding method call by the token smart
+            contract instead of upon the Liquidity creation event on Uniswap.
+          </Infobox>
+        </div>
 
         <select
           value={method}
           disabled={isDropdownDisabled}
           onChange={handleSelectChange}
-          className={`border border-purple-950 bg-slate-950 text-slate-300 p-2 h-6 rounded-md ${
+          className={`border border-purple-950 bg-slate-950 text-slate-300 h-6 rounded-md ${
             isDropdownDisabled ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
@@ -54,12 +61,6 @@ function CustomSelectInput() {
         </select>
       </div>
 
-      <Infobox title="Method Snipe">
-        Used to circumnavigate anti-bot measures by sending the buy transaction
-        upon the corresponding method call by the token smart contract instead
-        of upon the Liquidity creation event on Uniswap.
-      </Infobox>
-
       {isCustomMethod && (
         <div className="mt-2">
           <input
@@ -68,7 +69,7 @@ function CustomSelectInput() {
             value={method}
             onChange={(e) => setMethod(e.target.value)}
             autoFocus
-            className="input input-bordered text-center w-full h-8 text-slate-300 border-purple-950 border-2 bg-slate-950 rounded-none"
+            className="input mt-6 input-bordered text-center w-full h-8 text-slate-300 border-purple-950 border-2 bg-slate-950 rounded-none"
           />
         </div>
       )}

@@ -12,7 +12,10 @@ import useWallets from "../hooks/useWallets";
 import CustomSelectInput from "../utils/MethodSelectInput";
 import SelectFlashbot from "../components/selectFlashbot";
 import Sell from "../components/Sell";
-import Gassettings from "../components/Gassettings";
+import Customgas from "../components/CustomGas";
+import GasMultiplier from "../components/GasMultiplier";
+import MaxTx from "../components/MaxTx";
+import SellOptions from "../components/SellOptions";
 
 const userId = "0x3929B2Ff6a288C7454F5B5ffe652e3300126480A";
 
@@ -117,7 +120,7 @@ const Sniper = () => {
                 e.preventDefault();
                 handleStartBot();
               }}
-              className="flex flex-col space-y-4"
+              className="flex flex-col border-purple-950 border-r-4 bg-slate-800 border-2 space-y-4"
             >
               <div id="amount" className="flex flex-row items-start">
                 <input
@@ -196,14 +199,14 @@ const Sniper = () => {
                 <button
                   type="button"
                   onClick={handleCreateWallet}
-                  className=" border-slate-300  text-slate-300 bg-gradient-to-r from-slate-700 to-slate-800 flex content-center h-12 text-xs border p-2  rounded-none rounded-tl-xl  w-32 hover:text-sky-300 hover:border-sky-300 hover:bg-gradient-to-r hover:from-sky-700 hover:to-sky-800"
+                  className=" border-purple-700 border-b-4  text-slate-300 bg-gradient-to-r from-slate-700 to-slate-800 flex content-center h-12 text-xs border p-2  rounded-none rounded-tl-xl  w-32 hover:text-sky-300 hover:border-sky-300 hover:bg-gradient-to-r hover:from-sky-700 hover:to-sky-800"
                 >
                   <BsPlusCircleDotted />
                   Create New Wallet
                 </button>
                 <button
                   type="submit"
-                  className=" text-slate-300 text-bold h-12 w-full border-slate-300 border p-2 bg-gradient-to-r  from-green-700 to-green-600 rounded-tr-xl btn-outline btn-accent"
+                  className=" text-purple-700 text-bold h-12 w-full border-purple-700 border-2 border-b-4 p-2 bg-gradient-to-r  from-green-700 to-green-600 rounded-tr-xl  btn-outline btn-accent"
                   onClick={handleStartBot}
                 >
                   ----Start Bot----
@@ -226,20 +229,36 @@ const Sniper = () => {
               </ul>
             </div>
           </div>
-          <div id="second-row" className="w-1/3 flex flex-col pt-8 mx-4 p-4">
-            <div className="flex-grow h-40 items-end">
+          <div
+            id="second-row"
+            className="w-1/3 flex flex-col pt-12 ml-4 px-8 pl-4 "
+          >
+            <div className="h-20 mb-4 ">
+              <GasMultiplier />
+            </div>
+            <div className="h-20 mb-4 pt-2 border-t-2   border-black">
+              <Customgas />
+            </div>
+            <div className="h-20 mb-4 pt-2 items-end  border-t-2 border-black">
               <CustomSelectInput />
             </div>
-            <div className=" h-2/3 border-t-2 border-slate-900 w-full">
+            <div className=" h-20 mb-4 pt-2 border-t-2  border-slate-900 w-full">
               <SelectFlashbot />
             </div>
-            <div className="flex flex-grow h-full border-t-2 border-black">
-              <Gassettings />
+            <div className=" h-24 mb-4 pt-2 border-t-2 border-b-2 border-slate-900 w-full">
+              <MaxTx />
             </div>
+            <div className="flex-grow  bg-purple-950"></div>
           </div>
 
-          <div id="third row" className="w-1/3 flex mt-2 pt-8 mx-4 p-4 ">
-            <Sell />
+          <div id="third row" className="w-1/3 flex-grow mt-2 pt-8 mx-4 pl-4  ">
+            <div className=" border-b-2 h-fit border-purple-700">
+              <Sell />
+            </div>
+            <div className="flex-grow h-full">
+              {" "}
+              <SellOptions />
+            </div>
           </div>
         </div>
         <Console>

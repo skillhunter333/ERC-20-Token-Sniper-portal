@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import Infobox from "../utils/Infobox";
 
-const SelectFlashbot = () => {
-  const [isFlashbotTx, setIsFlashbotTx] = useState(false);
-  const [isBribeDisabled, setIsBribeDisabled] = useState(true);
+const GasMultiplier = () => {
+  const [isGasMultiplierEnabled, setIsGasMultiplierEnabled] = useState(true);
+  const [multiplierValue, setMultiplierValue] = useState(1);
 
   const handleCheckboxChange = (event) => {
-    setIsFlashbotTx(event.target.checked);
-    setIsBribeDisabled(!event.target.checked);
+    setIsGasMultiplierEnabled(!event.target.checked);
   };
 
   return (
@@ -16,38 +15,38 @@ const SelectFlashbot = () => {
         <label className=" inline-flex bg-slate-900 h-6 rounded-l-3xl items-center">
           <input
             type="checkbox"
-            checked={!isBribeDisabled}
+            checked={!isGasMultiplierEnabled}
             onChange={handleCheckboxChange}
             className="toggle accent-black  fill-slate-500"
           />
 
           <span
             className={`${
-              isBribeDisabled ? "text-purple-700" : "text-pink-700"
+              isGasMultiplierEnabled ? "text-purple-700" : "text-pink-700"
             } font-bold bg-slate-900 h-6 mx-4 w-48 rounded-xl hover:underline`}
           >
-            Flashbot tx
+            Gas Multiplier
           </span>
         </label>
         <div className="">
-          <Infobox title="Flashbot tx">
-            Using a flashbot transaction can lead to faster inclusion in a block
-            if the validator accepts the bid. However, it also may incur higher
-            fees due to competitive bidding{" "}
+          <Infobox title="Gas multiplier">
+            Pay a higher gas price than the estimated gas price to ensure the tx
+            succeeding as fast as possible. Insert 1.5 to pay 50% more gas than
+            estimated.
           </Infobox>
         </div>
       </div>
-      <div className="flex justify-end items-center mt-2">
-        <span className="text-slate-400 text-md mr-2">Set bribe</span>
+      <div className=" flex justify-end items-center mt-2">
+        <span className="text-slate-400 text-md mr-2">Gas</span>
         <input
           type="number"
           className={`input w-32 h-8 text-slate-300 text-end border-purple-950 border-2 bg-slate-950 rounded-none rounded-tl-xl ${
-            isBribeDisabled ? "opacity-50 cursor-not-allowed" : ""
+            isGasMultiplierEnabled ? "opacity-50 cursor-not-allowed" : ""
           }`}
+          onChange={(e) => setMultiplierValue(e.target.value)}
         />
       </div>
     </div>
   );
 };
-
-export default SelectFlashbot;
+export default GasMultiplier;

@@ -5,7 +5,7 @@ const Infobox = ({ title, children }) => {
     <div className="dropdown dropdown-end">
       <label
         tabIndex={0}
-        className="btn btn-circle bg-slate-900 btn-ghost btn-xs text-purple-700 hover:text-pink-700"
+        className="btn rounded-none bg-slate-900 btn-ghost btn-xs text-purple-700 hover:text-pink-700"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { IoReload } from "react-icons/io5";
 
 const Sell = () => {
   const [totalTokens, setTotalTokens] = useState(0);
@@ -20,7 +21,7 @@ const Sell = () => {
   };
 
   return (
-    <div className="mt-1 w-full ">
+    <div className="mt-1 w-full border-purple-950 border-r-2 rounded-tl-xl bg-slate-800 border-t-2 border-l-8">
       <div>
         <div id="amount" className="flex items-start">
           {["100", "50", "10"].map((percentage) => (
@@ -66,6 +67,16 @@ const Sell = () => {
 
         <div className="flex flex-col mt-4 space-y-2">
           <div className="flex justify-end items-end w-full">
+            <div className="bg-slate-900 border-2 border-purple-950 w-1/2 flex justify-between items-center rounded-none rounded-t-xl">
+              <button
+                type="button"
+                className="text-slate-300 ml-6 p-2 hover:text-sky-300"
+                onClick={console.log("reload tokenamount")}
+              >
+                <IoReload size={28} />
+              </button>
+            </div>
+
             <span className="font-bold text-slate-400">Slippage in %</span>
             <input
               id="slippageInput"
@@ -77,8 +88,8 @@ const Sell = () => {
               pattern="^\d+(\.\d+)?$"
             />
           </div>
-          <div className="flex pt-4">
-            <button className="text-slate-400 text-bold h-12 w-32 border-slate-900 border p-2 bg-gradient-to-r from-red-950 to-red-900 rounded-tl-xl">
+          <div className="flex pt-8">
+            <button className="text-slate-400 text-bold h-12  w-32 border-slate-900 border p-2 bg-gradient-to-r from-red-950 to-red-900 btn-outline btn-accent rounded-tl-xl">
               Sell
             </button>
             <div className="bg-slate-900 flex flex-grow space-x-4 italic items-center justify-center h-12 text-purple-700 font-semibold text-lg">
