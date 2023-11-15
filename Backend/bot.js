@@ -5,6 +5,7 @@ const IUniswapV2Factory = require("@uniswap/v2-core/build/IUniswapV2Factory.json
 const IUniswapV2Router02 = require("@uniswap/v2-periphery/build/IUniswapV2Router02.json");
 const IUniswapV2Pair = require("@uniswap/v2-core/build/IUniswapV2Pair.json");
 const IERC20 = require("@openzeppelin/contracts/build/contracts/ERC20.json");
+const { emit } = require("nodemon");
 
 class Bot {
   constructor() {
@@ -26,13 +27,16 @@ class Bot {
     }
   }
    
-    async startBot({ userId, AMOUNT, slippage, tokenToBuy, decryptedPrivateKey }) {
+    async startBot({ userId, AMOUNT, slippage, tokenToBuy, decryptedPrivateKey, fixedGasPrice, fixedGasLimit, gasMultiplier }) {
     this.isRunning = true;
     
     this.AMOUNT = AMOUNT;
     this.slippage = slippage;
     this.tokenToBuy = tokenToBuy;
     this.decryptedPrivateKey = decryptedPrivateKey;
+    this.fixedGasPrice = fixedGasPrice;
+    this.fixedGasLimit = fixedGasLimit;
+    this.gasMultiplier = gasMultiplier  || 1;
   
     this.wallet = new ethers.Wallet(this.decryptedPrivateKey, this.provider);
     this.sniper = this.wallet.connect(this.provider);
@@ -70,9 +74,12 @@ class Bot {
   this.emitToUser( {message: `Amount: ${this.AMOUNT} WETH\n`});
   this.emitToUser( {message: `|\n`}); 
   this.emitToUser( {message: `Slippage: ${this.slippage} %\n`});
-  this.emitToUser( {message: `Transaction type: \n`});
-  this.emitToUser( {message: `GAS: \n`});
-
+  
+  if (this.fixedGasPrice && this.fixedGasLimit) {this.emitToUser( {message: `GAS: ${this.fixedGasPrice} GASLIMIT: ${this.fixedGasLimit} \n`});
+this.emitToUser( {message: `Transaction type: regular, fixed Gas-Input \n`});}
+else if (this.gasMultiplier !== 1) {this.emitToUser( {message: `Boosting the estimated gas input by ${this.gasMultiplier} % \n`});
+this.emitToUser( {message: `Transaction type: regular, boosted dynamic Gas-Input \n`});}
+else {this.emitToUser( {message: `Transaction type: regular, regular Gas-Input \n`});}
 
 
 
@@ -137,24 +144,31 @@ this.pairCreatedListener = async (token0, token1, pair) => {
     console.log("Approved WETH... Swapping... \n");
     this.emitToUser({ message: "Approved WETH... Swapping... \n"});
 
-    this.estimatedGas = await this.uRouter.estimateGas.swapExactTokensForTokens(
-      this.amountIn,
-      this.amountOutMin,
-      this.path,
-      this.sniperAdress,
-      this.deadline
-    );
+    let gasPrice;
+    let gasLimit;
 
-    this.gasLimit = this.estimatedGas.add(this.estimatedGas.div(10));
+      if (this.fixedGasLimit) {
+                gasLimit = ethers.BigNumber.from(this.fixedGasLimit);
+            } else {
+                let estimatedGas = await this.uRouter.estimateGas.swapExactTokensForTokens(
+                    this.amountIn,
+                    this.amountOutMin,
+                    this.path,
+                    this.sniperAdress,
+                    this.deadline
+                );
+                gasLimit = estimatedGas.mul(ethers.BigNumber.from(100 + this.gasMultiplier)).div(ethers.BigNumber.from(100));
+            }
 
-    this.tx = await this.uRouter.swapExactTokensForTokens(
-      this.amountIn,
-      this.amountOutMin,
-      this.path,
-      this.sniperAdress,
-      this.deadline,
-      { gasLimit: this.gasLimit }
-    );
+            // Perform the transaction with specified gas price and limit
+            const tx = await this.uRouter.swapExactTokensForTokens(
+                this.amountIn,
+                this.amountOutMin,
+                this.path,
+                this.sniperAdress,
+                this.deadline,
+                { gasPrice, gasLimit }
+            );
 
      this.receipt = await this.tx.wait();
 
@@ -190,7 +204,9 @@ this.emitToUser({ message: "|\n"});
 
 stopBot() {
   return new Promise((resolve, reject) => {
-     if (!this.isRunning) return;
+     if (!this.isRunning) {
+     emitToUser({ message: "No Bot instance running...\n"});
+     return;}
 
   if (this.pairCreatedListener) {
     this.uFactory.removeListener("PairCreated", this.pairCreatedListener);

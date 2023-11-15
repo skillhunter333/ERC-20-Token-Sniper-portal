@@ -21,7 +21,7 @@ const Sell = () => {
   };
 
   return (
-    <div className="mt-1 w-full border-purple-950 border-r-2 rounded-tl-xl bg-slate-800 border-t-2 border-l-8">
+    <div className=" w-full border-purple-950 border-r-2 rounded-tr-2xl bg-slate-800 border-t-2 ">
       <div>
         <div id="amount" className="flex items-start">
           {["100", "50", "10"].map((percentage) => (
@@ -29,13 +29,11 @@ const Sell = () => {
               key={percentage}
               onClick={() => handlePercentage(percentage)}
               className={`border-2 h-8  ${
-                percentage === "100"
-                  ? "flex-grow w-full rounded-tl-lg bg-red-950 "
-                  : "w-1/2"
+                percentage === "100" ? "flex-grow w-full  bg-red-950 " : "w-1/2"
               }
               ${
                 percentage === "10" ? "bg-red-800 mr-2" : "bg-red-900"
-              } text-slate-500 border-purple-950  font-semibold px-1 pb-1 rounded-none hover:text-slate-300 hover:border-4`}
+              } text-slate-500 border-purple-900  font-semibold px-1 pb-1 rounded-none hover:text-slate-300 hover:border-4`}
             >
               {percentage} %
             </button>
@@ -49,7 +47,7 @@ const Sell = () => {
             placeholder="0000"
             value={sellAmount}
             onChange={handleSellAmountChange}
-            className="input w-32 h-8 text-end text-slate-200 pl-4 border-purple-950 border-2 bg-slate-950 rounded-none rounded-br-xl"
+            className="input w-32 h-8 text-end text-slate-200 pl-4 border-purple-950 border-2 bg-slate-950 rounded-none rounded-tr-xl "
             pattern="^\d+(\.\d+)?$"
           />
         </div>

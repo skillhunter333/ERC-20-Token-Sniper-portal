@@ -1,0 +1,46 @@
+/* Console.css */
+.console-container {
+    position: relative;
+    font-family: 'Courier Prime', monospace;
+    /* or any monospace font of your choice */
+}
+
+.console-content {
+    /* Additional styles can be added here if needed */
+}
+
+.console-message {
+    white-space: pre-wrap;
+    /* Ensures text wraps and preserves spacing */
+}
+
+.console-input-container {
+    display: flex;
+    align-items: center;
+}
+
+.console-input {
+    flex-grow: 1;
+    background-color: transparent;
+    color: #00ff00;
+    /* Green text */
+    caret-color: #00ff00;
+    /* Green cursor in the input field */
+}
+
+.console-prompt {
+    color: #00ff00;
+    /* Green text for the prompt */
+}
+
+.console-cursor {
+    animation: blink 1s step-start infinite;
+    color: #00ff00;
+    /* Green text for the cursor */
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}

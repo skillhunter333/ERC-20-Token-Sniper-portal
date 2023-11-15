@@ -45,20 +45,21 @@ function CustomSelectInput() {
             contract instead of upon the Liquidity creation event on Uniswap.
           </Infobox>
         </div>
-
-        <select
-          value={method}
-          disabled={isDropdownDisabled}
-          onChange={handleSelectChange}
-          className={`border border-purple-950 bg-slate-950 text-slate-300 h-6 rounded-md ${
-            isDropdownDisabled ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-        >
-          <option value="enableTrading()">enableTrading()</option>
-          <option value="startTrading()">startTrading()</option>
-          <option value="activateTrading()">activateTrading()</option>
-          <option value="custom">Custom...</option>
-        </select>
+        <div className="flex justify-end items-center mt-2">
+          <select
+            value={method}
+            disabled={isDropdownDisabled}
+            onChange={handleSelectChange}
+            className={`border border-purple-950 bg-slate-950 text-slate-300 h-6 rounded-md ${
+              isDropdownDisabled ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            <option value="enableTrading()">enableTrading()</option>
+            <option value="startTrading()">startTrading()</option>
+            <option value="activateTrading()">activateTrading()</option>
+            <option value="custom">Custom...</option>
+          </select>
+        </div>
       </div>
 
       {isCustomMethod && (
@@ -69,7 +70,7 @@ function CustomSelectInput() {
             value={method}
             onChange={(e) => setMethod(e.target.value)}
             autoFocus
-            className="input mt-6 input-bordered text-center w-full h-8 text-slate-300 border-purple-950 border-2 bg-slate-950 rounded-none"
+            className="input mt-2 input-bordered text-center w-full h-8 text-slate-300 border-purple-950 border-2 bg-slate-950 rounded-none"
           />
         </div>
       )}

@@ -24,6 +24,7 @@ const Sniper = () => {
   const [amount, setAmount] = useState("");
   const [slippage, setSlippage] = useState("");
   const [tokenToBuy, setTokenToBuy] = useState("");
+  const [isClassicMode, setIsClassicMode] = useState(false);
   const [
     wallets,
     walletsIncludingBalances,
@@ -112,24 +113,22 @@ const Sniper = () => {
     <>
       <div className="p-8 pt-10 m-32 border-black border-4 rounded-lg shadow-md shadow-white bg-slate-700">
         <div className="flex">
-          <div className="w-1/3">
-            <h1 className="text-xl font-bold mb-4">Uniswap V2 Sniper bot</h1>
-
+          <div className="w-1/3 bg-purple-950 border-t-[24px] border-r-[16px] border-l-[24px]  border-purple-950 rounded-tl-3xl rounded-tr-3xl">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 handleStartBot();
               }}
-              className="flex flex-col border-purple-950 border-r-4 bg-slate-800 border-2 space-y-4"
+              className="flex flex-col border-t-8 border-purple-950 rounded-t-3xl pt-2 bg-slate-800 border-2 space-y-4"
             >
-              <div id="amount" className="flex flex-row items-start">
+              <div id="amount" className="flex flex-row pt-4 items-start">
                 <input
                   id="amountInput"
                   type="text"
                   placeholder="eg. 0.3"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="input w-32 h-8 text-end text-slate-200 pr-4 border-purple-950 border-2 bg-slate-950 rounded-none rounded-bl-xl"
+                  className="input w-32 h-8 text-end text-slate-200 pr-4 border-purple-950 border-2 bg-slate-950 rounded-none  rounded-bl-2xl"
                   pattern="^\d+(\.\d+)?$"
                   required
                 />
@@ -137,13 +136,13 @@ const Sniper = () => {
                 <span className="font-bold  text-slate-400 text-center pl-2 ">
                   WETH
                 </span>
-                <button className=" w-1/3  text-center ml-2 h-8  px-1 pb-1 bg-green-800 font-semibold border-purple-950 text-slate-500 border-2 rounded-none rounded-bl-lg hover:text-slate-300 hover:border-4">
+                <button className=" w-1/3  text-center ml-2 h-8  px-1 pb-1 bg-green-800 font-semibold border-purple-900 text-slate-500 border-2 rounded-none rounded-bl-lg hover:text-slate-300 hover:border-4">
                   10 %
                 </button>
-                <button className="border-2 h-8 w-1/2 text-slate-500 bg-green-900 border-purple-950 font-semibold px-1 pb-1 hover:text-slate-300 hover:border-4 ">
+                <button className="border-2 h-8 w-1/2 text-slate-500 bg-green-900 border-purple-900 font-semibold px-1 pb-1 hover:text-slate-300 hover:border-4 ">
                   50 %
                 </button>
-                <button className="border-2 h-8  w-full text-slate-500 border-purple-950  bg-green-950 font-semibold  px-1 pb-1 rounded-none rounded-tr-lg hover:text-slate-300 hover:border-4">
+                <button className="border-2 h-8  w-full text-slate-500 border-purple-900  bg-green-950 font-semibold  px-1 pb-1 rounded-none   hover:text-slate-300 hover:border-4">
                   100 %
                 </button>
               </div>
@@ -156,7 +155,7 @@ const Sniper = () => {
                     placeholder="eg. 30%"
                     value={slippage}
                     onChange={(e) => setSlippage(e.target.value)}
-                    className="input w-32 h-8 text-slate-300 text-end border-purple-950 border-2 bg-slate-950 rounded-none rounded-tl-xl"
+                    className="input w-32 h-8 text-slate-300 text-end border-purple-950 border-2 bg-slate-950 rounded-none rounded-tl-2xl"
                     pattern="^\d+(\.\d+)?$"
                     required
                   />
@@ -214,7 +213,7 @@ const Sniper = () => {
               </div>
             </form>
 
-            <div className="mb-4 mt-2">
+            <div className="mb-4 pt-2  bg-slate-900">
               <h2 className="text-lg font-semibold">Your Wallets</h2>
 
               <ul>
@@ -227,37 +226,64 @@ const Sniper = () => {
                   onWalletCopy={copyToClipboard}
                 />
               </ul>
+              <div className="flex-grow flex-col h-max  bg-slate-900">
+                {" "}
+                here
+              </div>
             </div>
           </div>
           <div
             id="second-row"
-            className="w-1/3 flex flex-col pt-12 ml-4 px-8 pl-4 "
+            className="w-1/3 bg-slate-900 border-purple-950 border-t-[16px]    flex flex-col mt-8  px-8  "
           >
-            <div className="h-20 mb-4 ">
+            <div className="h-20 pt-2 mb-4 ">
               <GasMultiplier />
             </div>
-            <div className="h-20 mb-4 pt-2 border-t-2   border-black">
+            <div className="h-20 mb-4 pt-2 border-t-2   border-slate-400">
               <Customgas />
             </div>
-            <div className="h-20 mb-4 pt-2 items-end  border-t-2 border-black">
+            <div className="h-20 mb-4 pt-2 items-end  border-t-2   border-slate-400">
               <CustomSelectInput />
             </div>
-            <div className=" h-20 mb-4 pt-2 border-t-2  border-slate-900 w-full">
+            <div className=" h-20 mb-4 pt-2 border-t-2   border-slate-400 w-full">
               <SelectFlashbot />
             </div>
-            <div className=" h-24 mb-4 pt-2 border-t-2 border-b-2 border-slate-900 w-full">
+            <div className=" h-20 mb-4 pt-2 border-t-2   border-slate-400 w-full">
               <MaxTx />
             </div>
-            <div className="flex-grow  bg-purple-950"></div>
           </div>
 
-          <div id="third row" className="w-1/3 flex-grow mt-2 pt-8 mx-4 pl-4  ">
-            <div className=" border-b-2 h-fit border-purple-700">
+          <div
+            id="third row"
+            className="w-1/3 flex-grow relative mt-8  border-[16px] bg-purple-950 border-purple-950 border-r-[24px] rounded-tr-3xl"
+          >
+            <div className="border-b-4 h-fit border-purple-900">
               <Sell />
             </div>
-            <div className="flex-grow h-full">
-              {" "}
+            <div className="flex-grow mt-4 ">
               <SellOptions />
+            </div>
+            <div className="bg-slate-900 h-full  border-b-8 border-slate-100"></div>
+
+            <div className="absolute bottom-0 right-0 space-x-4 mb-2 mr-2 text-slate-400">
+              <button
+                className="underline"
+                onClick={console.log("Classic Mode")}
+              >
+                Chart Mode
+              </button>
+              <button
+                className="underline"
+                onClick={console.log("Classic Mode")}
+              >
+                Classic
+              </button>
+              <button
+                className="underline"
+                onClick={console.log("Classic Mode")}
+              >
+                Pro
+              </button>
             </div>
           </div>
         </div>

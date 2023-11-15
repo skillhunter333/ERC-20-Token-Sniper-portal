@@ -6,7 +6,7 @@ import etherscan from "../assets/etherscan.svg";
 const Wallet = ({ wallet, onDelete, onSetActive, onCopy, isSelected }) => {
   return (
     <li
-      className={`flex justify-items-start border-b-2 text-white text-bold border-white p-2 
+      className={`flex justify-items-start border-b-2 text-slate-300 text-bold border-slate-300 h-20 p-2 
                   ${isSelected ? "bg-sky-700" : ""}`}
       onClick={() => {
         onSetActive(wallet.publicKey);

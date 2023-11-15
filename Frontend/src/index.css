@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @layer components {
   .art {
     color: #4ade80; /* Tailwind's 'green-400' */
@@ -32,4 +33,44 @@
 
 .console .cursor {
   animation: blink 1s step-end infinite;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+
+/* Customizing the scrollbar track (background) */
+::-webkit-scrollbar-track {
+  background: #000000;
+  /* Color of the track */
+}
+
+/* Customizing the scrollbar handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(0, 0, 0);
+  /* Color of the thumb */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #000000;
+  /* Color when the thumb is hovered */
+}
+
+/* Customizing the scrollbar width */
+::-webkit-scrollbar {
+  width: 0px;
+  /* Width of the vertical scrollbar */
+  height: 0px;
+  /* Height of the horizontal scrollbar */
 }
