@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Console from "../components/Console";
-import ASCIIart from "../utils/ASCII";
 import { io } from "socket.io-client";
 import { BsPlusCircleDotted, BsFillSignStopFill } from "react-icons/bs";
 import { IoReload } from "react-icons/io5";
@@ -36,10 +35,59 @@ const Sniper = () => {
     refreshBalances,
     handleDelete,
   ] = useWallets(userId);
+  //////////
+
+  const [selectedWalletPublicKey, setSelectedWalletPublicKey] = useState("");
+
+  useEffect(() => {
+    if (walletsIncludingBalances.length > 0) {
+      setSelectedWalletPublicKey(walletsIncludingBalances[0].publicKey);
+    }
+  }, [walletsIncludingBalances]);
 
   const [logs, setLogs] = useState([]);
 
-  const [method, setMethod] = useState("");
+  const [isCustomFixedGasEnabled, setIsCustomFixedGasEnabled] = useState(false);
+  const [fixedGasPrice, setFixedGasPrice] = useState(null);
+  const [fixedGasLimit, setFixedGasLimit] = useState(null);
+
+  const [isGasMultiplierEnabled, setIsGasMultiplierEnabled] = useState(true);
+  const [multiplierValue, setMultiplierValue] = useState(1.3);
+
+  const [isCustomMethodEnabled, setIsCustomMethodEnabled] = useState(false);
+  const [customMethod, setCustomMethod] = useState(null);
+
+  const [flashBotEnabled, setFlashBotEnabled] = useState(null);
+  const [bribeValue, setBribeValue] = useState(null);
+
+  const [isMaxTxEnabled, setIsMaxTxEnabled] = useState(false);
+  const [maxTx, setMaxTx] = useState(null);
+
+  ////////////////// toggle functions
+
+  const handleGasMultiplierToggle = (isEnabled) => {
+    setIsGasMultiplierEnabled(isEnabled);
+    if (isEnabled) {
+      setIsCustomFixedGasEnabled(false);
+      setFlashBotEnabled(false);
+    }
+  };
+
+  const handleCustomFixedGasToggle = (isEnabled) => {
+    setIsCustomFixedGasEnabled(isEnabled);
+    if (isEnabled) {
+      setIsGasMultiplierEnabled(false);
+      setFlashBotEnabled(false);
+    }
+  };
+
+  const handleFlashBotToggle = (isEnabled) => {
+    setFlashBotEnabled(isEnabled);
+    if (isEnabled) {
+      setIsGasMultiplierEnabled(false);
+      setIsCustomFixedGasEnabled(false);
+    }
+  };
 
   /////////////Functions
 
@@ -52,6 +100,12 @@ const Sniper = () => {
           amount,
           slippage,
           tokenToBuy,
+          fixedGasPrice,
+          fixedGasLimit,
+          multiplierValue,
+          customMethod,
+          bribeValue,
+          maxTx,
         },
         { headers: { "Cache-Control": "no-cache" } }
       );
@@ -74,6 +128,13 @@ const Sniper = () => {
         `Error stopping bot: ${error.response?.data?.message || error.message}`
       );
     }
+  };
+
+  ////handle Wallet
+
+  const onSetActiveWallet = (walletPublicKey) => {
+    setSelectedWalletPublicKey(walletPublicKey);
+    handleSetActiveWallet(walletPublicKey); // Calling backend update
   };
 
   ////////////////////////////////
@@ -169,7 +230,7 @@ const Sniper = () => {
                     className="text-slate-300 ml-6 p-2 hover:text-sky-300"
                     onClick={refreshBalances}
                   >
-                    <IoReload size={28} />
+                    <IoReload size={28} onClick={fetchWallets} />
                   </button>
                   <button
                     type="button"
@@ -219,11 +280,11 @@ const Sniper = () => {
               <ul>
                 {" "}
                 <WalletList
-                  userId={userId}
-                  wallets={walletsIncludingBalances}
-                  onWalletDelete={handleDelete}
-                  onWalletSetActive={handleSetActiveWallet}
-                  onWalletCopy={copyToClipboard}
+                  walletsIncludingBalances={walletsIncludingBalances}
+                  deleteWallet={handleDelete}
+                  setActiveWallet={onSetActiveWallet}
+                  copyWalletAddress={copyToClipboard}
+                  selectedWalletPublicKey={selectedWalletPublicKey}
                 />
               </ul>
               <div className="flex-grow flex-col h-max  bg-slate-900">
@@ -237,19 +298,40 @@ const Sniper = () => {
             className="w-1/3 bg-slate-900 border-purple-950 border-t-[16px]    flex flex-col mt-8  px-8  "
           >
             <div className="h-20 pt-2 mb-4 ">
-              <GasMultiplier />
+              <GasMultiplier
+                setMultiplierValue={setMultiplierValue}
+                isEnabled={isGasMultiplierEnabled}
+                setIsEnabled={handleGasMultiplierToggle}
+              />
             </div>
             <div className="h-20 mb-4 pt-2 border-t-2   border-slate-400">
-              <Customgas />
+              <Customgas
+                setFixedGasPrice={setFixedGasPrice}
+                setFixedGasLimit={setFixedGasLimit}
+                isEnabled={isCustomFixedGasEnabled}
+                setIsEnabled={handleCustomFixedGasToggle}
+              />
             </div>
             <div className="h-20 mb-4 pt-2 items-end  border-t-2   border-slate-400">
-              <CustomSelectInput />
+              <CustomSelectInput
+                setCustomMethod={setCustomMethod}
+                isEnabled={isCustomMethodEnabled}
+                setIsEnabled={setIsCustomMethodEnabled}
+              />
             </div>
             <div className=" h-20 mb-4 pt-2 border-t-2   border-slate-400 w-full">
-              <SelectFlashbot />
+              <SelectFlashbot
+                setBribeValue={setBribeValue}
+                isEnabled={flashBotEnabled}
+                setIsEnabled={handleFlashBotToggle}
+              />
             </div>
             <div className=" h-20 mb-4 pt-2 border-t-2   border-slate-400 w-full">
-              <MaxTx />
+              <MaxTx
+                setMaxTx={setMaxTx}
+                isEnabled={isMaxTxEnabled}
+                setIsEnabled={setIsMaxTxEnabled}
+              />
             </div>
           </div>
 
@@ -263,7 +345,7 @@ const Sniper = () => {
             <div className="flex-grow mt-4 ">
               <SellOptions />
             </div>
-            <div className="bg-slate-900 h-full  border-b-8 border-slate-100"></div>
+            <div className="bg-slate-900   border-b-8 border-slate-100"></div>
 
             <div className="absolute bottom-0 right-0 space-x-4 mb-2 mr-2 text-slate-400">
               <button
@@ -288,10 +370,10 @@ const Sniper = () => {
           </div>
         </div>
         <Console>
-          <div className="font-CourierPrime-Regular text-sm pt-2 ">
-            <ASCIIart />
+          <div className="text-bold font-CourierPrime-Regular text-2xl my-4 text-center border-2 border-purple-900 text-pink-700">
+            ERC-20 Sniper Bot (Uniswap V2)
           </div>
-          <div className="text-semibold font-CourierPrime-Regular text-green-500 text-lg">
+          <div className="text-semibold font-CourierPrime-Regular text-green-500 text-lg text-center border-b border-dashed border-green-500">
             The selected wallet will be used to execute the transaction - make
             sure to{" "}
             <span className="text-sky-700 underline">
@@ -299,7 +381,6 @@ const Sniper = () => {
               provide enough ETH to cover for gas fees and enough WETH to buy{" "}
             </span>{" "}
             the specified token
-            -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
           </div>
           {logs.map((log, index) => (
             <div key={index}>{log}</div>

@@ -1,22 +1,23 @@
-import React, { useState } from "react";
-import Wallet from "../components/Wallet";
-import useWallets from "../hooks/useWallets";
+import React from "react";
+import Wallet from "./Wallet";
 
-const WalletList = ({ userId, onDelete, onSetActive, onCopy, isSelected }) => {
-  const [wallets, walletsIncludingBalances, fetchWallets, setActiveWallet] =
-    useWallets(userId);
-  const [selectedWalletPublicKey, setSelectedWalletPublicKey] = useState("");
-
+const WalletList = ({
+  walletsIncludingBalances,
+  deleteWallet,
+  setActiveWallet,
+  copyWalletAddress,
+  selectedWalletPublicKey,
+}) => {
   return (
     <ul>
-      {wallets.map((wallet) => (
+      {walletsIncludingBalances.map((wallet) => (
         <Wallet
           key={wallet.publicKey}
           wallet={wallet}
-          onDelete={onDelete}
-          onSetActive={setActiveWallet}
+          onDelete={() => deleteWallet(wallet.publicKey)}
+          onSetActive={() => setActiveWallet(wallet.publicKey)}
           isSelected={wallet.publicKey === selectedWalletPublicKey}
-          onCopy={onCopy}
+          onCopy={() => copyWalletAddress(wallet.publicKey)}
         />
       ))}
     </ul>

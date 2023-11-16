@@ -3,14 +3,35 @@ const Bot = require('../../bot');
 class BotService {
   static botInstances = new Map();
 
-  static startBot({userId, AMOUNT, slippage, tokenToBuy, decryptedPrivateKey, fixedGasPrice, fixedGasLimit, gasMultiplier }) {
+  static startBot({userId,
+          amount,
+          slippage,
+          tokenToBuy,
+          fixedGasPrice,
+          fixedGasLimit,
+          multiplierValue,
+          customMethod,
+          bribeValue,
+          maxTx,
+        decryptedPrivateKey }) {
     if (this.botInstances.has(userId)) {
       console.log(`Attempt to start bot for user ${userId} which is already running.`);
       throw new Error('Bot is already running for this user.');
+      
     }
     try {
      const bot = new Bot();
-      bot.startBot({userId, AMOUNT, slippage, tokenToBuy, decryptedPrivateKey, fixedGasPrice, fixedGasLimit, gasMultiplier });
+      bot.startBot({userId,
+          amount,
+          slippage,
+          tokenToBuy,
+          fixedGasPrice,
+          fixedGasLimit,
+          multiplierValue,
+          customMethod,
+          bribeValue,
+          maxTx,
+        decryptedPrivateKey });
       this.botInstances.set(userId, bot);
       console.log(`Bot started for user ${userId}.`);
     } catch (error) {

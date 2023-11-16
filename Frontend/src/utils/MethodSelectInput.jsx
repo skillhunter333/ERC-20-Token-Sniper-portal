@@ -1,79 +1,86 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Infobox from "./Infobox";
 
-function CustomSelectInput() {
-  const [method, setMethod] = useState("");
-  const [isCustomMethod, setIsCustomMethod] = useState(false);
-  const [isDropdownDisabled, setIsDropdownDisabled] = useState(true);
+function CustomSelectInput({ setCustomMethod, isEnabled, setIsEnabled }) {
+  const [selectedMethod, setSelectedMethod] = useState("");
+  const [customMethod, setCustomMethodInput] = useState("");
+
+  useEffect(() => {
+    if (selectedMethod === "custom") {
+      setCustomMethod(customMethod);
+    } else {
+      setCustomMethod(selectedMethod);
+    }
+  }, [selectedMethod, customMethod, setCustomMethod]);
 
   const handleSelectChange = (event) => {
-    if (event.target.value === "custom") {
-      setIsCustomMethod(true);
-      setMethod("");
-    } else {
-      setIsCustomMethod(false);
-      setMethod(event.target.value);
+    const value = event.target.value;
+    setSelectedMethod(value);
+    if (value !== "custom") {
+      setCustomMethodInput("");
     }
   };
 
   const handleCheckboxChange = (event) => {
-    setIsDropdownDisabled(!event.target.checked);
+    setIsEnabled(event.target.checked);
+    if (!event.target.checked) {
+      setSelectedMethod("");
+    }
   };
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center justify-between font-semibold text-lg ">
-        <div className="flex items-center">
-          <label className="inline-flex bg-slate-900 h-6 rounded-l-3xl items-center">
-            <input
-              type="checkbox"
-              checked={!isDropdownDisabled}
-              onChange={handleCheckboxChange}
-              className="toggle fill-slate-500"
-            />
-            <span
-              className={`${
-                isDropdownDisabled ? "text-purple-700" : "text-pink-700"
-              } mx-4 w-48 font-bold h-8 px-8 rounded-xl hover:underline`}
-            >
-              method snipe
-            </span>
-          </label>
-          <Infobox title="Method Snipe">
-            Used to circumnavigate anti-bot measures by sending the buy
-            transaction upon the corresponding method call by the token smart
-            contract instead of upon the Liquidity creation event on Uniswap.
-          </Infobox>
-        </div>
-        <div className="flex justify-end items-center mt-2">
-          <select
-            value={method}
-            disabled={isDropdownDisabled}
-            onChange={handleSelectChange}
-            className={`border border-purple-950 bg-slate-950 text-slate-300 h-6 rounded-md ${
-              isDropdownDisabled ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+      {/* Checkbox and Info */}
+      <div className="flex items-center font-semibold text-lg">
+        <label className="inline-flex bg-slate-900 h-6 rounded-l-3xl items-center">
+          <input
+            type="checkbox"
+            checked={isEnabled}
+            onChange={handleCheckboxChange}
+            className="toggle fill-slate-500"
+          />
+          <span
+            className={`${
+              isEnabled ? "text-pink-700" : "text-purple-700"
+            } mx-4 w-48 font-bold h-8 px-8 rounded-xl hover:underline`}
           >
-            <option value="enableTrading()">enableTrading()</option>
-            <option value="startTrading()">startTrading()</option>
-            <option value="activateTrading()">activateTrading()</option>
-            <option value="custom">Custom...</option>
-          </select>
-        </div>
+            method snipe
+          </span>
+        </label>
+        <Infobox title="Method Snipe">
+          Used to circumnavigate anti-bot measures by sending the buy
+          transaction upon the corresponding method call by the token smart
+          contract instead of upon the Liquidity creation event on Uniswap.
+        </Infobox>
       </div>
 
-      {isCustomMethod && (
-        <div className="mt-2">
+      {/* Method Selection */}
+      <div className="flex justify-end items-center mt-2">
+        {/* Custom Method Input */}
+        {selectedMethod === "custom" && (
           <input
             type="text"
             placeholder="-Enter custom method-"
-            value={method}
-            onChange={(e) => setMethod(e.target.value)}
+            value={customMethod}
+            onChange={(e) => setCustomMethodInput(e.target.value)}
             autoFocus
-            className="input mt-2 input-bordered text-center w-full h-8 text-slate-300 border-purple-950 border-2 bg-slate-950 rounded-none"
+            className=" input  mt-2 input-bordered text-center w-full h-8 text-slate-300 border-purple-950 border-2 bg-slate-950 rounded-none"
           />
-        </div>
-      )}
+        )}
+        <select
+          value={selectedMethod}
+          onChange={handleSelectChange}
+          className={`input w-32 h-8  text-slate-300 text-end border-purple-950 border-2 bg-slate-950 rounded-none rounded-tl-xl ${
+            !isEnabled ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          <option value="">Select Method...</option>
+          <option value="enableTrading()">enableTrading()</option>
+          <option value="startTrading()">startTrading()</option>
+          <option value="activateTrading()">activateTrading()</option>
+          <option value="custom">Custom...</option>
+        </select>
+      </div>
     </div>
   );
 }

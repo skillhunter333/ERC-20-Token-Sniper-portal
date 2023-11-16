@@ -3,15 +3,32 @@ const WalletService = require('../services/walletService'); // Assuming you have
 
 const startBotEndpoint = async (req, res) => {
   try {
-    const { userId, amount, slippage, tokenToBuy, fixedGasPrice, fixedGasLimit, gasMultiplier } = req.body;
+    const {userId,
+          amount,
+          slippage,
+          tokenToBuy,
+          fixedGasPrice,
+          fixedGasLimit,
+          multiplierValue,
+          customMethod,
+          bribeValue,
+          maxTx, } = req.body;
 
     // Validate input...
 
     const decryptedPrivateKey = await WalletService.getPrivateKeyForUser(userId);
-    let AMOUNT = amount;
-  
     
-    const success = BotService.startBot({userId, AMOUNT, slippage, tokenToBuy, decryptedPrivateKey, fixedGasPrice, fixedGasLimit, gasMultiplier });
+    const success = BotService.startBot({userId,
+          amount,
+          slippage,
+          tokenToBuy,
+          fixedGasPrice,
+          fixedGasLimit,
+          multiplierValue,
+          customMethod,
+          bribeValue,
+          maxTx,
+          decryptedPrivateKey,});
 
     if (success) {
       res.json({ success: true, message: "Bot initiated" });

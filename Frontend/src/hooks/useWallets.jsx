@@ -79,7 +79,7 @@ const useWallets = (userId) => {
   const handleCreateWallet = useCallback(async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/create-wallet`,
+        `${import.meta.env.VITE_API_URL}/api/createWallet`,
         { userId }
       );
       setWallets((prevWallets) => [...prevWallets, response.data]);
@@ -104,7 +104,7 @@ const useWallets = (userId) => {
             key,
           }
         );
-        setSelectedWalletPublicKey(key);
+
         toast.success("Selected wallet set as active wallet successfully!");
       } catch (error) {
         toast.error(

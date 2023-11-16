@@ -15,7 +15,7 @@ function MyComponent() {
   };
 
   return (
-    <div className="flex justify-end h-full bg-slate-900 rounded-t-lg  pt-16 py-4 ">
+    <div className="flex flex-col  bg-slate-900 rounded-t-lg  pt-16 py-4 ">
       <ul className="flex flex-col text-xl justify-items-start border-b-2 text-purple-700 font-bold border-white p-2">
         <li className="flex justify-between items-center bg-slate-900 text-slate-200 p-2 rounded-md mb-2">
           <div className="flex items-center text-purple-700">

@@ -5,7 +5,7 @@ const IUniswapV2Factory = require("@uniswap/v2-core/build/IUniswapV2Factory.json
 const IUniswapV2Router02 = require("@uniswap/v2-periphery/build/IUniswapV2Router02.json");
 const IUniswapV2Pair = require("@uniswap/v2-core/build/IUniswapV2Pair.json");
 const IERC20 = require("@openzeppelin/contracts/build/contracts/ERC20.json");
-const { emit } = require("nodemon");
+
 
 class Bot {
   constructor() {
@@ -27,16 +27,26 @@ class Bot {
     }
   }
    
-    async startBot({ userId, AMOUNT, slippage, tokenToBuy, decryptedPrivateKey, fixedGasPrice, fixedGasLimit, gasMultiplier }) {
+    async startBot({ userId,
+          amount,
+          slippage,
+          tokenToBuy,
+          fixedGasPrice,
+          fixedGasLimit,
+          multiplierValue,
+          customMethod,
+          bribeValue,
+          maxTx,
+         decryptedPrivateKey }) {
     this.isRunning = true;
     
-    this.AMOUNT = AMOUNT;
+    this.amount = amount;
     this.slippage = slippage;
     this.tokenToBuy = tokenToBuy;
     this.decryptedPrivateKey = decryptedPrivateKey;
     this.fixedGasPrice = fixedGasPrice;
     this.fixedGasLimit = fixedGasLimit;
-    this.gasMultiplier = gasMultiplier  || 1;
+    this.gasMultiplier = multiplierValue  || 1;
   
     this.wallet = new ethers.Wallet(this.decryptedPrivateKey, this.provider);
     this.sniper = this.wallet.connect(this.provider);
@@ -66,20 +76,18 @@ class Bot {
   this.lastFour = this.wallet.address.slice(-4);
   this.shortAddress = this.firstThree + "..." + this.lastFour;
 
-  this.emitToUser( {message: `|\n`});  
+  this.emitToUser( {message: `>\n`});  
   this.emitToUser( {message: `BOT initiated\n`});
-  this.emitToUser( {message: `|\n`});  
+  this.emitToUser( {message: `>\n`});  
   this.emitToUser( {message: `Wallet to snipe with: ${this.shortAddress} |||  Balances: ${ethers.utils.formatEther(this.wethBalance)} WETH  ||  ${ethers.utils.formatEther(this.ethBalance)} ETH  \n`});
-  this.emitToUser( {message: `\n Token to snipe: ${this.tokenToBuy}\n`});
-  this.emitToUser( {message: `Amount: ${this.AMOUNT} WETH\n`});
-  this.emitToUser( {message: `|\n`}); 
-  this.emitToUser( {message: `Slippage: ${this.slippage} %\n`});
+  this.emitToUser( {message: `\n Target: ${this.tokenToBuy} ||| Amount: ${this.amount} WETH ||| Slippage: ${this.slippage} %\n`});
   
-  if (this.fixedGasPrice && this.fixedGasLimit) {this.emitToUser( {message: `GAS: ${this.fixedGasPrice} GASLIMIT: ${this.fixedGasLimit} \n`});
-this.emitToUser( {message: `Transaction type: regular, fixed Gas-Input \n`});}
-else if (this.gasMultiplier !== 1) {this.emitToUser( {message: `Boosting the estimated gas input by ${this.gasMultiplier} % \n`});
-this.emitToUser( {message: `Transaction type: regular, boosted dynamic Gas-Input \n`});}
-else {this.emitToUser( {message: `Transaction type: regular, regular Gas-Input \n`});}
+ 
+  
+if (this.fixedGasPrice && this.fixedGasLimit) this.emitToUser( {message: `tx: regular, gas: fixed, gas-price: ${this.fixedGasPrice} Gwei, limit: ${this.fixedGasLimit}  \n`});
+else if (this.gasMultiplier !== 1) {this.emitToUser( {message: `tx: regular, gas: boosted, multiplicator: ${this.gasMultiplier}x \n`});}
+else {this.emitToUser( {message: `tx: regular, gas: regular (please make sure regularly estimated gas will be sufficient for the planned tx) \n`});}
+this.emitToUser( {message: `>\n`}); 
 
 
 
@@ -96,7 +104,7 @@ this.pairCreatedListener = async (token0, token1, pair) => {
   
   console.log(`Pair Address: ${pair}\n`);
   this.emitToUser( { message: `Pair Address: ${pair}\n`});
-  this.emitToUser( { message: `|\n`});
+  this.emitToUser( { message: `>\n`});
 
 
   this.path = [];
@@ -135,7 +143,7 @@ this.pairCreatedListener = async (token0, token1, pair) => {
   this.emitToUser( { message: "Swapping...\n"});
 
   try {
-    this.amountIn = ethers.utils.parseEther(this.AMOUNT);
+    this.amountIn = ethers.utils.parseEther(this.amount);
     this.amounts = await this.uRouter.getAmountsOut(this.amountIn, this.path);
     this.amountOutMin = this.amounts[1].sub(this.amounts[1].div(this.slippage));
     this.deadline = Date.now() + 10 * 60 * 1000;
@@ -177,8 +185,8 @@ this.pairCreatedListener = async (token0, token1, pair) => {
     console.log("Success!");
     this.emitToUser({ message: "Success!"});
     
-    console.log(`Swapped ${this.AMOUNT} WETH for ${ethers.utils.formatEther(this.tokenBalance)} ${this.symbol}\n`);
-    this.emitToUser( { message: `Swapped ${this.AMOUNT} WETH for ${ethers.utils.formatEther(this.tokenBalance)} ${this.symbol}\n`});
+    console.log(`Swapped ${this.amount} WETH for ${ethers.utils.formatEther(this.tokenBalance)} ${this.symbol}\n`);
+    this.emitToUser( { message: `Swapped ${this.amount} WETH for ${ethers.utils.formatEther(this.tokenBalance)} ${this.symbol}\n`});
     
     console.log(`View on Etherscan: https://etherscan.io/tx/${this.receipt.transactionHash}\n`);
     this.emitToUser( { message: `View on Etherscan: https://etherscan.io/tx/${this.receipt.transactionHash}\n`});
@@ -189,14 +197,14 @@ this.pairCreatedListener = async (token0, token1, pair) => {
   }
 
   console.log(`Listening for new pairs created on Uniswap V2...\n`);
-  this.emitToUser( { message: "Listening for new pairs created on Uniswap V2...\n"});
+  this.emitToUser( { message: "\nListening for new pairs created on Uniswap V2...\n"});
 };
 
 this.uFactory.on("PairCreated", this.pairCreatedListener);
 
 console.log(`Listening for new pairs created on Uniswap V2...\n`);
-this.emitToUser({ message: "Listening for new pairs created on Uniswap V2...\n"});
-this.emitToUser({ message: "|\n"});
+this.emitToUser({ message: "\nListening for new pairs created on Uniswap V2...\n"});
+this.emitToUser({ message: ">\n"});
 }
 
 
